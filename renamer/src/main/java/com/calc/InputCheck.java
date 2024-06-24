@@ -11,7 +11,11 @@ public class InputCheck {
     //TODO: test
     protected String removeNonimdbTags(String input)  {
         int startIndex = 1;
+<<<<<<< HEAD
         int endIndex = 2;
+=======
+        int endIndex = 0;
+>>>>>>> 3f5be8b8ae295ad3eeced047fdb0edcf94330bf7
         StringBuilder temp1 = new StringBuilder(input);
             
         //This code is not efficient but should work for now
@@ -38,7 +42,7 @@ public class InputCheck {
 
     //TODO: test
     protected String parenthesisTheYear(String input)   {
-        int startIndex = 0;
+        int startIndex = 1;
         int endIndex = 2;
         StringBuilder temp = new StringBuilder(input);
 
