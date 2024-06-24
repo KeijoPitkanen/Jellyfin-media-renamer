@@ -2,7 +2,6 @@ package com.calc;
 
 public class InputCheck {
 
-
     //TODO: test
     protected String changeDotsToSpaces(String input)   {
         input.replace('.', ' ');
@@ -11,8 +10,8 @@ public class InputCheck {
 
     //TODO: test
     protected String removeNonimdbTags(String input)  {
-        int startIndex = 0;
-        int endIndex = 0;
+        int startIndex = 1;
+        int endIndex = 2;
         StringBuilder temp1 = new StringBuilder(input);
             
         //This code is not efficient but should work for now
@@ -81,7 +80,6 @@ public class InputCheck {
                 temp.substring(input.indexOf(resolution) + resolution.length());
                 input = input.substring(0, input.indexOf(resolution)) + temp;
             }
-
             switch (resolution) {
                 case "420p":
                     resolution = "720p";
@@ -101,5 +99,23 @@ public class InputCheck {
     }
 
     //TODO: delete everything after (year) except [IMdb id] 
-    
+    protected String deleteRestOfTags(String input) {
+        int startIndex = 1;
+        int endIndex = 1;
+
+        while (endIndex < input.length()) {
+            if (input.charAt(startIndex) != '(') {
+                startIndex++;
+                endIndex = startIndex;
+                endIndex++;
+            }   else {
+                try {
+                    Integer.parseInt(input.substring(startIndex + 1, endIndex + 5));
+                }   catch(NumberFormatException e)   {
+                    //Finish this
+                }
+            }
+            
+        }
+    }
 }
