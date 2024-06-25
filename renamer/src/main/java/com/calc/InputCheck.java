@@ -12,6 +12,8 @@ public class InputCheck {
         return input;
     }
 
+    //TODO. make sure the file extension is not changed
+
     //TODO: test
     protected String changeDotsToSpaces(String input)   {
         input.replace('.', ' ');
