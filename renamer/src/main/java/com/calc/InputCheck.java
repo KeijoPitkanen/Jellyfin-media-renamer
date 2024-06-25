@@ -11,11 +11,7 @@ public class InputCheck {
     //TODO: test
     protected String removeNonimdbTags(String input)  {
         int startIndex = 1;
-<<<<<<< HEAD
         int endIndex = 2;
-=======
-        int endIndex = 0;
->>>>>>> 3f5be8b8ae295ad3eeced047fdb0edcf94330bf7
         StringBuilder temp1 = new StringBuilder(input);
             
         //This code is not efficient but should work for now
@@ -102,24 +98,30 @@ public class InputCheck {
         return input;
     }
 
-    //TODO: delete everything after (year) except [IMdb id] 
+    //TODO: test 
     protected String deleteRestOfTags(String input) {
         int startIndex = 1;
         int endIndex = 1;
+        int year = 0;
 
         while (endIndex < input.length()) {
             if (input.charAt(startIndex) != '(') {
-                startIndex++;
-                endIndex = startIndex;
-                endIndex++;
             }   else {
                 try {
-                    Integer.parseInt(input.substring(startIndex + 1, endIndex + 5));
+                    year = Integer.parseInt(input.substring(startIndex + 1, endIndex + 5));
                 }   catch(NumberFormatException e)   {
-                    //Finish this
                 }
             }
-            
+            startIndex++;
+            endIndex = startIndex;
+            endIndex++;
+            if (year != 0) {
+                break;
+            }
         }
+
+        endIndex = input.indexOf(']');
+        input = input.substring(0, endIndex);
+        return input;
     }
 }
