@@ -6,9 +6,9 @@ public class Main {
 
 
         //Tests start
-        LinuxTerminal terminal = new LinuxTerminal();
+        //LinuxTerminal terminal = new LinuxTerminal();
 
-        terminal.runCommand();
+       //terminal.runCommand();
 
         //Tests end
     }
