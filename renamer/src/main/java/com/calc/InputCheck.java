@@ -2,6 +2,16 @@ package com.calc;
 
 public class InputCheck {
 
+    protected String runAllParsers(String input)    {
+        input = changeDotsToSpaces(input);
+        input = deleteResolutionTag(input);
+        input = parenthesisTheYear(input);
+        input = removeNonimdbTags(input);
+        input = deleteRestOfTags(input);
+
+        return input;
+    }
+
     //TODO: test
     protected String changeDotsToSpaces(String input)   {
         input.replace('.', ' ');
