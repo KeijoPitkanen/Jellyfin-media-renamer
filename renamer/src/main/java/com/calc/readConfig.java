@@ -3,7 +3,7 @@ package com.calc;
 public class readConfig {
     
     //TODO:
-    final String pathToJellyfinFolder = "";
+    String pathToJellyfinFolder = "/home/skula/test/activeTesting";
 
     public String getPathToJellyfinFolder() {
         return getPathToJellyfinFolder();
