@@ -1,6 +1,8 @@
 package com.calc;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
+import java.util.Arrays;
 
 public class LinuxTerminal extends InputCheck{
 
@@ -36,9 +38,10 @@ public class LinuxTerminal extends InputCheck{
         try {
             //Test
             command = Runtime.getRuntime().exec(LinuxCommands.ls + "/home/skula/test/activeTesting");
-            String temp;
 
             BufferedReader br = new BufferedReader(new InputStreamReader(command.getInputStream()));
+            String temp;
+
             while ((temp = br.readLine()) != null)    {
                 System.out.println(temp);
             }
@@ -52,43 +55,51 @@ public class LinuxTerminal extends InputCheck{
         }
     }
 
+    //TODO: use find /home/skula/test/activeTesting -type d | wc -l
+    private int getNumberOfItemsInDir(String dir)   {
+        Process command;
+        return 0;
+    }
+
     protected void test()   {
         Process command;
         int numberOfItems = 0;
         String temp = "";
-
+        //Default value here
+        String currentPath = "/home/skula/test/activeTesting";
         try {
-            command = Runtime.getRuntime().exec("ls /home/skula | wc -l");
-
+            //wc not working. 
+            command = Runtime.getRuntime().exec("ls " + currentPath + " | wc");
             BufferedReader br = new BufferedReader(new InputStreamReader(command.getInputStream()));
-            br.readLine();
             command.waitFor();
+
+            br.readLine();
             temp = br.readLine();
             //This has to be done because wc -l command gives the output of "total {number}"
-            temp = temp.substring(7);
+            temp = temp.substring(6);
             numberOfItems = Integer.parseInt(temp);
 
             System.out.println("Number of items " + numberOfItems);
             
             String pathOfFiles[] = new String[numberOfItems];
-            
 
-            command = Runtime.getRuntime().exec(LinuxCommands.ls + "/home/skula/test/activeTesting");
+            command = Runtime.getRuntime().exec(LinuxCommands.ls + currentPath);
             br = new BufferedReader(new InputStreamReader(command.getInputStream()));
-/* 
-            while ((temp = br.readLine()) != null)    {
-                System.out.println(temp);
-            }
-*/
             for(int count = 0; count < numberOfItems; count++)   {
                 pathOfFiles[count] = br.readLine();
             }
+            for(int count = 0; count < numberOfItems; count++)   {
+                pathOfFiles[count] = currentPath + pathOfFiles[count];
+            }
+
+
+            System.out.println(Arrays.toString(pathOfFiles));
+
             
             
         }catch (Exception e) {
             System.out.println("Something went wrong");
         }
-
     }
     
 }

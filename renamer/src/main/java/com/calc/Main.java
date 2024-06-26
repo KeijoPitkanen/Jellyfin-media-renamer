@@ -10,7 +10,6 @@ public class Main {
 
         //terminal.runCommand();
         terminal.test();
-
         //Tests end
     }
 }
