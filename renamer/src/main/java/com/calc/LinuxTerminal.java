@@ -56,9 +56,28 @@ public class LinuxTerminal extends InputCheck{
     }
 
     //TODO: use find /home/skula/test/activeTesting -type d | wc -l
-    private int getNumberOfItemsInDir(String dir)   {
+    public int getNumberOfItemsInDir(String dir, char type)   {
+        //Type is d for directory and f for file
         Process command;
-        return 0;
+        String output = "";
+        int numberOfItems = 0;
+        try {
+            command = Runtime.getRuntime().exec("find " + dir + " -type " + type + " | wc -l");
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(command.getInputStream()));
+
+            output = br.readLine();
+
+            numberOfItems = Integer.parseInt(output);
+        } catch (Exception e) {
+            System.out.println("Something went wrong with counting the files/fodlers");
+        }
+
+        if (type == 'd') {
+            return numberOfItems - 1;
+        }   else    {
+            return numberOfItems;
+        }
     }
 
     protected void test()   {

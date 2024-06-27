@@ -7,9 +7,8 @@ public class Main {
 
         //Tests start
         LinuxTerminal terminal = new LinuxTerminal();
+        System.out.println(terminal.getNumberOfItemsInDir("/home/skula/test/activeTesting", 'd'));
 
-        //terminal.runCommand();
-        terminal.test();
         //Tests end
     }
 }
