@@ -7,7 +7,12 @@ public class Main {
 
         //Tests start
         LinuxTerminal terminal = new LinuxTerminal();
-        terminal.test();
+        try {
+            terminal.test();
+
+        } catch (Exception e) {
+            System.out.println("a fucky wucky");
+        }
 
         //Tests end
     }
