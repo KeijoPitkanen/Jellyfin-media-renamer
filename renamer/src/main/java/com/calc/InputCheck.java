@@ -12,16 +12,23 @@ public class InputCheck {
         return input;
     }
 
-    //TODO. make sure the file extension is not changed
+    private String excludeFileExtension(String input)   {
+        String output = input.substring(0, input.lastIndexOf('.'));
+        return output;
+    }
 
     //TODO: test
     protected String changeDotsToSpaces(String input)   {
+        input = excludeFileExtension(input);
+
         input.replace('.', ' ');
         return input;
     }
 
     //TODO: test
     protected String removeNonimdbTags(String input)  {
+        input = excludeFileExtension(input);
+
         int startIndex = 1;
         int endIndex = 2;
         StringBuilder temp1 = new StringBuilder(input);
@@ -50,6 +57,8 @@ public class InputCheck {
 
     //TODO: test
     protected String parenthesisTheYear(String input)   {
+        input = excludeFileExtension(input);
+
         int startIndex = 1;
         int endIndex = 2;
         StringBuilder temp = new StringBuilder(input);
@@ -82,6 +91,8 @@ public class InputCheck {
 
     //TODO: test
     protected String deleteResolutionTag(String input)   {
+        input = excludeFileExtension(input);
+
         String resolution = "420p";
         boolean state = true;
 
@@ -112,6 +123,8 @@ public class InputCheck {
 
     //TODO: test 
     protected String deleteRestOfTags(String input) {
+        input = excludeFileExtension(input);
+
         int startIndex = 1;
         int endIndex = 1;
         int year = 0;
