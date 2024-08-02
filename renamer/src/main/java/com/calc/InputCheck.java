@@ -2,6 +2,22 @@ package com.calc;
 
 public class InputCheck {
 
+    private String excludeFileExtension(String input)   {
+        String output = input.substring(0, input.lastIndexOf('.'));
+        return output;
+    }
+
+    private boolean checkForSpecifiedChar(String input, int startIndex) {
+        switch (input.charAt(startIndex - 1)) {
+            case ' ':
+                return true;
+            case '(':
+                return true;            
+            default:
+                return false;
+        }
+    }
+
     protected String runAllParsers(String input)    {
         input = changeDotsToSpaces(input);
         input = deleteResolutionTag(input);
@@ -10,11 +26,6 @@ public class InputCheck {
         input = deleteRestOfTags(input);
 
         return input;
-    }
-
-    private String excludeFileExtension(String input)   {
-        String output = input.substring(0, input.lastIndexOf('.'));
-        return output;
     }
 
     //TODO: test
@@ -78,16 +89,7 @@ public class InputCheck {
         return input;
     }
 
-    private boolean checkForSpecifiedChar(String input, int startIndex) {
-        switch (input.charAt(startIndex - 1)) {
-            case ' ':
-                return true;
-            case '(':
-                return true;            
-            default:
-                return false;
-        }
-    }
+
 
     //TODO: test
     protected String deleteResolutionTag(String input)   {
