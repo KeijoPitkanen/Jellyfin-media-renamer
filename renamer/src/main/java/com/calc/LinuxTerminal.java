@@ -46,10 +46,14 @@ public class LinuxTerminal extends InputCheck{
     
             temp = line.indexOf(',') + 1;
             count ++;
-            //Check that the last dir gets also added
-
-
+            //This is messy
+            if (line.indexOf(',') == -1) {
+                dirs[count] = line.substring(temp);
+                break;
+            }
         }
+        return dirs;
+
 
     }
 
