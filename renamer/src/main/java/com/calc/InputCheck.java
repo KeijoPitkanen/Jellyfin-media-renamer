@@ -2,10 +2,72 @@ package com.calc;
 
 public class InputCheck {
 
-    private String excludeFileExtension(String input)   {
+    protected String runAllParsers(String input)    {
+        String fileExtension = getFileExtension(input);
+        if (fileExtension.length() < input.length()) {
+            input = removeFileExtension(input);
+        }   else    {
+            fileExtension = "";
+        }
+        input = changeDotsToSpaces(input);
+        input = deleteResolutionTag(input);
+        input = parenthesisTheYear(input);
+        input = removeNonimdbTags(input);
+        input = deleteRestOfTags(input);
+        input = deleteLastSpace(input);
+
+        return input + fileExtension;
+    }
+    
+    //TODO error handling for unknown file extension
+    private String getFileExtension(String input)   {
+        String output = input;
+
+        if (input.lastIndexOf('.') == -1) {
+            return output;
+        }
+        String fileExtension = input.substring(input.lastIndexOf('.'));
+
+        //This needs to be expanded if necessary
+        switch (fileExtension) {
+            case ".mp4":
+                return fileExtension;
+            case ".srt":
+                return fileExtension;
+            case ".nfo":
+                return fileExtension;
+            case ".jpg":
+                return fileExtension;
+            case ".png":
+                return fileExtension;
+            case ".mkv":
+                return fileExtension;
+            case ".txt":
+                return fileExtension;
+            case ".avi":
+                return fileExtension;
+            case ".idx":
+                return fileExtension;
+            case ".sub":
+                return fileExtension;
+            case ".flv":
+                return fileExtension;
+            case ".exe":
+                return fileExtension;
+            case ".webm":
+                return fileExtension;
+            default:
+                fileExtension = "";
+                return fileExtension;
+
+        }
+    }
+
+    private String removeFileExtension(String input)    {
         String output = input.substring(0, input.lastIndexOf('.'));
         return output;
     }
+
 
     private boolean checkForSpecifiedChar(String input, int startIndex) {
         switch (input.charAt(startIndex - 1)) {
@@ -18,83 +80,84 @@ public class InputCheck {
         }
     }
 
-    protected String runAllParsers(String input)    {
-        input = changeDotsToSpaces(input);
-        input = deleteResolutionTag(input);
-        input = parenthesisTheYear(input);
-        input = removeNonimdbTags(input);
-        input = deleteRestOfTags(input);
 
-        return input;
-    }
 
     //TODO: test
     private String changeDotsToSpaces(String input)   {
-        input = excludeFileExtension(input);
-
-        input.replace('.', ' ');
-        return input;
+        String output = input;
+        output = output.replace('.', ' ');
+        return output;
     }
 
-    //TODO: test
-    private String removeNonimdbTags(String input)  {
-        input = excludeFileExtension(input);
+    private String deleteLastSpace(String input)    {
+        String output = input;
+        if (output.indexOf(output.length()+1) == ' ') {
+            output = output.substring(0, output.length() + 1);
+        }
+        return output;
+    }
+    
 
+    //TODO: test
+    protected String removeNonimdbTags(String input)  {
         int startIndex = 1;
         int endIndex = 2;
-        StringBuilder temp1 = new StringBuilder(input);
+        StringBuilder output = new StringBuilder(input);        
             
         //This code is not efficient but should work for now
-        while (temp1.indexOf("[") != temp1.lastIndexOf("[")) {
-            startIndex = temp1.indexOf("[");
+        while (output.indexOf("[") != -1) {
+           // startIndex = output.indexOf("[");
             //checks for imdb id tag "[tt"
-            if (temp1.substring(startIndex, startIndex + 3).equals("[tt") == true) {
-                startIndex = temp1.indexOf("]");
+            if (output.substring(startIndex, startIndex + 3).equals("[tt") == true) {
+                startIndex = output.indexOf("]");
                 //If tag exists checks if there are other brackets and deletes them from the string builder
-                if (temp1.substring(startIndex).indexOf("[") != -1) {
-                    startIndex = temp1.substring(startIndex).indexOf("[");
-                    endIndex = temp1.substring(startIndex).indexOf("]");
-                    temp1.delete(startIndex, endIndex + 1);
-                }
+                if (output.substring(startIndex).indexOf("[") != -1) {
+                    startIndex = output.substring(startIndex).indexOf("[");
+                    endIndex = output.substring(startIndex).indexOf("]");
+                    output.delete(startIndex, endIndex + 1);
+            }
             }   else    {
-                startIndex = temp1.substring(startIndex).indexOf("[");
-                endIndex = temp1.substring(startIndex).indexOf("]");
-                temp1.delete(startIndex, endIndex + 1);   
+                startIndex = output.indexOf("[");
+                endIndex = output.indexOf("]");
+                output.delete(startIndex, endIndex + 1);
             }    
         }
-        input = temp1.toString();
-        return input;
+        return output.toString();
     }
 
-    //TODO: test
+    //TODO: FIX THIS
     private String parenthesisTheYear(String input)   {
-        input = excludeFileExtension(input);
-
         int startIndex = 1;
-        int endIndex = 2;
-        StringBuilder temp = new StringBuilder(input);
+        int endIndex = 3;
+        StringBuilder output = new StringBuilder(input);
+
+        String deleteMe = "";
 
         //This is just a mess
-        if (input.substring(startIndex, endIndex) == "19" || input.substring(startIndex, endIndex) == "20") {
-            if (checkForSpecifiedChar(input, startIndex) == true) {
-                if (Character.isDigit(input.charAt(endIndex)) == true && Character.isDigit(input.charAt(endIndex + 1)) == true) {
-                    if (Character.isDigit(endIndex + 2) == false) {
-                        temp.setCharAt(startIndex - 1, '(');
-                        temp.setCharAt(endIndex + 2, ')');
+        
+        while (endIndex < input.length() - 2) {
+            deleteMe = input.substring(startIndex, endIndex);
+            if (input.substring(startIndex, endIndex) == "19" || input.substring(startIndex, endIndex) == "20") {
+                if (checkForSpecifiedChar(input, startIndex) == true) {
+                    if (Character.isDigit(input.charAt(endIndex)) == true && Character.isDigit(input.charAt(endIndex + 1)) == true) {
+                        if (Character.isDigit(endIndex + 2) == false) {
+                            output.setCharAt(startIndex - 1, '(');
+                            output.setCharAt(endIndex + 2, ')');
+                        }
                     }
                 }
             }
+            startIndex++;
+            endIndex++;
         }
-        input = temp.toString();
-        return input;
+
+        return output.toString();
     }
 
 
 
     //TODO: test
     private String deleteResolutionTag(String input)   {
-        input = excludeFileExtension(input);
-
         String resolution = "420p";
         boolean state = true;
 
@@ -102,7 +165,7 @@ public class InputCheck {
             if (input.contains(resolution)) {
                 String temp = input;
                 //This might cause problems
-                temp.substring(input.indexOf(resolution) + resolution.length());
+                temp = temp.substring(input.indexOf(resolution) + resolution.length());
                 input = input.substring(0, input.indexOf(resolution)) + temp;
             }
             switch (resolution) {
@@ -125,17 +188,17 @@ public class InputCheck {
 
     //TODO: test 
     private String deleteRestOfTags(String input) {
-        input = excludeFileExtension(input);
-
+        String output = input;
         int startIndex = 1;
         int endIndex = 1;
         int year = 0;
 
-        while (endIndex < input.length()) {
-            if (input.charAt(startIndex) != '(') {
+        //This could be done faster with a smarter algorithm
+        while (endIndex < output.length()) {
+            if (output.charAt(startIndex) != '(') {
             }   else {
                 try {
-                    year = Integer.parseInt(input.substring(startIndex + 1, endIndex + 5));
+                    year = Integer.parseInt(output.substring(startIndex + 1, endIndex + 5));
                 }   catch(NumberFormatException e)   {
                 }
             }
@@ -147,8 +210,11 @@ public class InputCheck {
             }
         }
 
-        endIndex = input.indexOf(']');
-        input = input.substring(0, endIndex);
-        return input;
+        endIndex = output.indexOf(')');
+          if (endIndex == -1) {
+            return output;
+        }
+        output = output.substring(0, endIndex + 1);
+        return output;
     }
 }
