@@ -129,14 +129,26 @@ public class InputCheck {
     private String parenthesisTheYear(String input)   {
         int startIndex = 1;
         int endIndex = 3;
-        StringBuilder output = new StringBuilder(input);
 
-        String deleteMe = "";
+        String temp = input;
 
+        startIndex = temp.substring(startIndex).indexOf('1');
+            if (startIndex == -1) {
+                startIndex = temp.substring(startIndex).indexOf('2');
+            }   else if (startIndex == -1)  {
+                return temp;
+            }
+
+        if (temp.indexOf('1') != -1 && temp.charAt(temp.indexOf(1) + 1) == '9') {
+            if (Character.isDigit(temp.charAt(startIndex + 3)) && Character.isDigit(temp.charAt(startIndex + 4)))   {
+                if (checkForSpecifiedChar(temp, startIndex)) {
+                    
+                }
+            }
+        }
         //This is just a mess
-        
+        /*
         while (endIndex < input.length() - 2) {
-            deleteMe = input.substring(startIndex, endIndex);
             if (input.substring(startIndex, endIndex) == "19" || input.substring(startIndex, endIndex) == "20") {
                 if (checkForSpecifiedChar(input, startIndex) == true) {
                     if (Character.isDigit(input.charAt(endIndex)) == true && Character.isDigit(input.charAt(endIndex + 1)) == true) {
@@ -150,8 +162,10 @@ public class InputCheck {
             startIndex++;
             endIndex++;
         }
+                    return output.toString();
 
-        return output.toString();
+        */
+
     }
 
 
