@@ -7,7 +7,24 @@ import java.util.List;
 
 public class LinuxTerminal extends InputCheck{
 
-    private void changeName(String files[], String path) throws IOException  {
+    private void changeName(String path) throws IOException  {
+        //files[] also includes dirs
+        String files[] = new String[getDirAndFileCount(path)];
+
+        if (files.length == 0) {
+            return;
+        }
+        files = getDirsAndFiles(path);
+        int count = 0;
+        //This is dumb but maybe this is just the best way to do this
+        while (count < files.length)    {
+            ProcessBuilder[] builders = {
+                new ProcessBuilder("cd", path),
+                new ProcessBuilder("mv", files[0], runAllParsers(files[0]))};
+            List<Process> processes = ProcessBuilder.startPipeline(
+                Arrays.asList(builders));
+            count++;
+        }
     }
 
     private int getDirCount(String path) throws IOException {
@@ -32,7 +49,7 @@ public class LinuxTerminal extends InputCheck{
 
         ProcessBuilder[] builders = {
             new ProcessBuilder("cd", path),
-            new ProcessBuilder("ls -d */"),
+            new ProcessBuilder("ls"),
             new ProcessBuilder("wc", "-l")};
         List<Process> processes = ProcessBuilder.startPipeline(
             Arrays.asList(builders));
@@ -50,7 +67,7 @@ public class LinuxTerminal extends InputCheck{
 
         ProcessBuilder[] builders = {
             new ProcessBuilder("cd", path),
-            new ProcessBuilder(("ls -m */"))};
+            new ProcessBuilder(("ls -m"))};
         List<Process> processes = ProcessBuilder.startPipeline(
             Arrays.asList(builders));
         Process last = processes.get(processes.size()-1);
@@ -84,7 +101,7 @@ public class LinuxTerminal extends InputCheck{
         //processbuilder is overkill for this
         ProcessBuilder[] builders = {
             new ProcessBuilder("cd ", path),
-            new ProcessBuilder("ls -dm ")};
+            new ProcessBuilder("ls -dm */")};
         List<Process> processes = ProcessBuilder.startPipeline(
             Arrays.asList(builders));
         Process last = processes.get(processes.size()-1);
