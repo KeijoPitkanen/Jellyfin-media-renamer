@@ -29,7 +29,7 @@ public class InputCheck {
     }
 
     //TODO: test
-    protected String changeDotsToSpaces(String input)   {
+    private String changeDotsToSpaces(String input)   {
         input = excludeFileExtension(input);
 
         input.replace('.', ' ');
@@ -37,7 +37,7 @@ public class InputCheck {
     }
 
     //TODO: test
-    protected String removeNonimdbTags(String input)  {
+    private String removeNonimdbTags(String input)  {
         input = excludeFileExtension(input);
 
         int startIndex = 1;
@@ -67,7 +67,7 @@ public class InputCheck {
     }
 
     //TODO: test
-    protected String parenthesisTheYear(String input)   {
+    private String parenthesisTheYear(String input)   {
         input = excludeFileExtension(input);
 
         int startIndex = 1;
@@ -92,7 +92,7 @@ public class InputCheck {
 
 
     //TODO: test
-    protected String deleteResolutionTag(String input)   {
+    private String deleteResolutionTag(String input)   {
         input = excludeFileExtension(input);
 
         String resolution = "420p";
@@ -124,7 +124,7 @@ public class InputCheck {
     }
 
     //TODO: test 
-    protected String deleteRestOfTags(String input) {
+    private String deleteRestOfTags(String input) {
         input = excludeFileExtension(input);
 
         int startIndex = 1;
