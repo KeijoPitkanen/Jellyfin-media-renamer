@@ -73,11 +73,7 @@ public class InputCheck {
         switch (input.charAt(startIndex - 1)) {
             case ' ':
                 return true;
-            case '(':
-                return true;
             case '[':
-                return true;
-            case ')':
                 return true;
             case ']':
                 return true;
@@ -137,24 +133,37 @@ public class InputCheck {
 
         String temp = input;
         StringBuilder output = new StringBuilder(temp);
+        char millenium = '1';
 
-        startIndex = temp.substring(startIndex).indexOf('1');
-            if (startIndex == -1) {
-                startIndex = temp.substring(startIndex).indexOf('2');
-            }   else if (startIndex == -1)  {
-                return temp;
-            }
+        while (startIndex < temp.length() - 3)  {
+            String deleteMe = temp.substring(startIndex);
+            
 
-        if (temp.charAt(startIndex + 1) == '9' || temp.charAt(startIndex + 1) == 0) {
-            if (Character.isDigit(temp.charAt(startIndex + 2)) && Character.isDigit(temp.charAt(startIndex + 3)))   {
-                if (checkForSpecifiedChar(temp, startIndex -1) && checkForSpecifiedChar(temp, startIndex + 4)) {
-                    //INSERT '(' to startIndex -1 and ')' to startindex + 4
-                    output.setCharAt(startIndex -1, '(');
-                    output.setCharAt(startIndex +4, ')');
+            if (temp.charAt(startIndex + 1) == '9' || temp.charAt(startIndex + 1) == 0) {
+                if (Character.isDigit(temp.charAt(startIndex + 2)) && Character.isDigit(temp.charAt(startIndex + 3)))   {
+                    if (checkForSpecifiedChar(temp, startIndex -1) && checkForSpecifiedChar(temp, startIndex + 4)) {
+                        output.setCharAt(startIndex -1, '(');
+                        output.setCharAt(startIndex +4, ')');
+                        return output.toString();
+                    }
                 }
             }
+
+            if (temp.charAt(startIndex) == millenium) {
+                startIndex++;
+            }
+            startIndex = temp.indexOf(millenium, startIndex);
+                if (startIndex == -1 && millenium == '1') {
+                    temp = input;
+                    millenium = '2';
+                    startIndex = 1;
+                    startIndex = temp.indexOf(millenium, startIndex);
+                }   else if (startIndex == -1)  {
+                    return output.toString();
+                }
         }
         return output.toString();
+        //the problem is with counting startIndex
     }
 
 
