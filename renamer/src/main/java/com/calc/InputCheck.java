@@ -74,7 +74,13 @@ public class InputCheck {
             case ' ':
                 return true;
             case '(':
-                return true;            
+                return true;
+            case '[':
+                return true;
+            case ')':
+                return true;
+            case ']':
+                return true;
             default:
                 return false;
         }
@@ -128,9 +134,9 @@ public class InputCheck {
     //TODO: FIX THIS
     private String parenthesisTheYear(String input)   {
         int startIndex = 1;
-        int endIndex = 3;
 
         String temp = input;
+        StringBuilder output = new StringBuilder(temp);
 
         startIndex = temp.substring(startIndex).indexOf('1');
             if (startIndex == -1) {
@@ -139,33 +145,16 @@ public class InputCheck {
                 return temp;
             }
 
-        if (temp.indexOf('1') != -1 && temp.charAt(temp.indexOf(1) + 1) == '9') {
-            if (Character.isDigit(temp.charAt(startIndex + 3)) && Character.isDigit(temp.charAt(startIndex + 4)))   {
-                if (checkForSpecifiedChar(temp, startIndex)) {
-                    
+        if (temp.charAt(startIndex + 1) == '9' || temp.charAt(startIndex + 1) == 0) {
+            if (Character.isDigit(temp.charAt(startIndex + 2)) && Character.isDigit(temp.charAt(startIndex + 3)))   {
+                if (checkForSpecifiedChar(temp, startIndex -1) && checkForSpecifiedChar(temp, startIndex + 4)) {
+                    //INSERT '(' to startIndex -1 and ')' to startindex + 4
+                    output.setCharAt(startIndex -1, '(');
+                    output.setCharAt(startIndex +4, ')');
                 }
             }
         }
-        //This is just a mess
-        /*
-        while (endIndex < input.length() - 2) {
-            if (input.substring(startIndex, endIndex) == "19" || input.substring(startIndex, endIndex) == "20") {
-                if (checkForSpecifiedChar(input, startIndex) == true) {
-                    if (Character.isDigit(input.charAt(endIndex)) == true && Character.isDigit(input.charAt(endIndex + 1)) == true) {
-                        if (Character.isDigit(endIndex + 2) == false) {
-                            output.setCharAt(startIndex - 1, '(');
-                            output.setCharAt(endIndex + 2, ')');
-                        }
-                    }
-                }
-            }
-            startIndex++;
-            endIndex++;
-        }
-                    return output.toString();
-
-        */
-
+        return output.toString();
     }
 
 
