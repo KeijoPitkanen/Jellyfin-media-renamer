@@ -69,6 +69,7 @@ public class InputCheck {
     }
 
 
+    //This mf is dumb
     private boolean checkForSpecifiedChar(String input, int startIndex) {
         switch (input.charAt(startIndex - 1)) {
             case ' ':
@@ -136,14 +137,18 @@ public class InputCheck {
         char millenium = '1';
 
         while (startIndex < temp.length() - 3)  {
-            String deleteMe = temp.substring(startIndex);
+            //String deleteMe = temp.substring(startIndex);
             
 
             if (temp.charAt(startIndex + 1) == '9' || temp.charAt(startIndex + 1) == 0) {
                 if (Character.isDigit(temp.charAt(startIndex + 2)) && Character.isDigit(temp.charAt(startIndex + 3)))   {
-                    if (checkForSpecifiedChar(temp, startIndex -1) && checkForSpecifiedChar(temp, startIndex + 4)) {
-                        output.setCharAt(startIndex -1, '(');
-                        output.setCharAt(startIndex +4, ')');
+
+                    if (checkForSpecifiedChar(temp, startIndex) && checkForSpecifiedChar(temp, startIndex + 5)) {
+                        output.insert(startIndex, '(');
+                        String delMe = output.toString();
+                        output.insert(startIndex +5, ')');
+                        String delMe2 = output.toString();
+
                         return output.toString();
                     }
                 }
@@ -158,6 +163,9 @@ public class InputCheck {
                     millenium = '2';
                     startIndex = 1;
                     startIndex = temp.indexOf(millenium, startIndex);
+                    if (startIndex == -1) {
+                        return output.toString();
+                    }
                 }   else if (startIndex == -1)  {
                     return output.toString();
                 }
