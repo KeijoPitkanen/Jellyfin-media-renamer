@@ -145,9 +145,7 @@ public class InputCheck {
 
                     if (checkForSpecifiedChar(temp, startIndex) && checkForSpecifiedChar(temp, startIndex + 5)) {
                         output.insert(startIndex, '(');
-                        String delMe = output.toString();
                         output.insert(startIndex +5, ')');
-                        String delMe2 = output.toString();
 
                         return output.toString();
                     }
