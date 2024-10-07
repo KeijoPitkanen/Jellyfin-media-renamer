@@ -3,12 +3,10 @@ package com.calc;
 public class InputCheck {
 
     protected String runAllParsers(String input)    {
+        //delete file extension from input and save it as it's own variable so it can be added in the end
         String fileExtension = getFileExtension(input);
-        if (fileExtension.length() < input.length()) {
-            input = removeFileExtension(input);
-        }   else    {
-            fileExtension = "";
-        }
+        input = removeFileExtension(input);
+        //Run the rest of the parsers
         input = changeDotsToSpaces(input);
         input = deleteResolutionTag(input);
         input = parenthesisTheYear(input);
@@ -21,13 +19,10 @@ public class InputCheck {
     
     //TODO error handling for unknown file extension
     private String getFileExtension(String input)   {
-        String output = input;
-
-        if (input.lastIndexOf('.') == -1) {
-            return output;
+        if  (input.lastIndexOf('.') == -1) {
+            return "";
         }
         String fileExtension = input.substring(input.lastIndexOf('.'));
-
         //This needs to be expanded if necessary
         switch (fileExtension) {
             case ".mp4":
@@ -59,12 +54,15 @@ public class InputCheck {
             default:
                 fileExtension = "";
                 return fileExtension;
-
         }
     }
 
     private String removeFileExtension(String input)    {
-        String output = input.substring(0, input.lastIndexOf('.'));
+        String fileExtension = getFileExtension(input);
+        String output = input.substring(0, input.length() - fileExtension.length());
+        if (output.length() == 0)   {
+            return input;
+        }
         return output;
     }
 
@@ -94,8 +92,8 @@ public class InputCheck {
 
     private String deleteLastSpace(String input)    {
         String output = input;
-        if (output.indexOf(output.length()+1) == ' ') {
-            output = output.substring(0, output.length() + 1);
+        if (output.charAt(output.length() - 1) == ' ') {
+            output = output.substring(0, output.length() - 1);
         }
         return output;
     }

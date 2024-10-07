@@ -2,7 +2,7 @@ package com.calc;
 import java.util.HashMap;
 import java.util.Scanner;
 
-public class CLI extends LinuxTerminal{
+public class CLI extends TerminalCommands {
     /*
      * How the algorithm works
      * 0. Homepath is set by user
@@ -83,23 +83,12 @@ public class CLI extends LinuxTerminal{
                     if (path.equals(homePath)) {
                         return;
                     }
-                    //GOTO STEOP 3.3
+                    //GOTO STEP 3.3
                 }
             }
         } catch (Exception e) {
             // TODO: handle exception
         }
-
-        
-            
-        
-
-
-
-    
     }
 
-
-
-    
 }

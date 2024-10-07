@@ -5,9 +5,9 @@ import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.List;
 
-public class LinuxTerminal extends InputCheck{
+public class TerminalCommands extends InputCheck{
 
-    private void changeName(String path) throws IOException  {
+    protected void changeName(String path) throws IOException  {
         //files[] also includes dirs
         String files[] = new String[getDirAndFileCount(path)];
 
@@ -27,7 +27,7 @@ public class LinuxTerminal extends InputCheck{
         }
     }
 
-    private int getDirCount(String path) throws IOException {
+    protected int getDirCount(String path) throws IOException {
         String line = "";
 
         ProcessBuilder[] builders = {
@@ -44,7 +44,7 @@ public class LinuxTerminal extends InputCheck{
         return Integer.valueOf(line);
     }
 
-    private int getDirAndFileCount(String path) throws IOException  {
+    protected int getDirAndFileCount(String path) throws IOException  {
         String line = "";
 
         ProcessBuilder[] builders = {
@@ -61,7 +61,7 @@ public class LinuxTerminal extends InputCheck{
         return Integer.valueOf(line);
     }
 
-    private String[] getDirsAndFiles(String path) throws IOException    {
+    protected String[] getDirsAndFiles(String path) throws IOException    {
         String line = "";
         String[] dirs = new String[getDirCount(path)];
 
@@ -94,7 +94,7 @@ public class LinuxTerminal extends InputCheck{
         return dirs;
     }
 
-    private String[] getDirs(String path) throws IOException    {
+    protected String[] getDirs(String path) throws IOException    {
         String line = "";
         String[] dirs = new String[getDirCount(path)];
 
@@ -125,5 +125,4 @@ public class LinuxTerminal extends InputCheck{
         }
         return dirs;
     }
-
 }
