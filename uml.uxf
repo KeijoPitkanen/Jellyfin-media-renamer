@@ -1,0 +1,25 @@
+<diagram program="umletino" version="15.1"><zoom_level>8</zoom_level><element><id>UMLClass</id><coordinates><x>40</x><y>176</y><w>168</w><h>56</h></coordinates><panel_attributes>_Main_
+--
++main(args: String[])
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>152</x><y>448</y><w>168</w><h>56</h></coordinates><panel_attributes>_readConfig_
+--
+-pathToJellyfinFolder: String
+--
++getPathToJellyfinFolder(): String</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>264</x><y>280</y><w>168</w><h>56</h></coordinates><panel_attributes>_LinuxTerminal_
+--
+TODO</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>144</x><y>584</y><w>168</w><h>56</h></coordinates><panel_attributes>_LinuxCommands_
+--
++ls: String
++readlink: String
++wc: String</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>488</x><y>344</y><w>296</w><h>160</h></coordinates><panel_attributes>_InputCheck_
+--
+-excludeFileExtensions(input: String): String
+-checkForSpecifiedChar(input: String, startIndex: int): boolean
+#runAllParsers(input: String): String
+#changDitsTiSoaces(input: String): String
+#removeNonimdbTags(input: String): String
+#parenthesisTheYear(input: String): String
+#deleteResolutionTag(input: String): String
+#deleteRestOfTags(input: String): String
+
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>224</x><y>496</y><w>24</w><h>104</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;110;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>424</x><y>304</y><w>80</w><h>136</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes><additional_attributes>80;150;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>128</x><y>224</y><w>152</w><h>104</h></coordinates><panel_attributes>lt=&lt;-</panel_attributes><additional_attributes>170;110;50;100;10;10</additional_attributes></element></diagram>
