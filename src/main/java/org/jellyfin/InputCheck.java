@@ -114,7 +114,6 @@ public class InputCheck {
     return output;
   }
   /**
-   * TODO: add support for tmdb and tvdb tags
    * InputCheck.runAllParsers()
    * @param input = file/dir local name
    * @return file/dir name which has had all the tags removed i.e. movie [zmovies] [tt100123] -> movie [tt100123]
@@ -126,7 +125,8 @@ public class InputCheck {
     while(output.substring(startIndex).contains("["))  {
       startIndex = output.indexOf("[");
       //checks if tag is imdb id tag. If so skips it
-      if (output.substring(startIndex, startIndex + 3). equals("[tt"))  {
+      String possibleTag = output.substring(startIndex, startIndex + 3);
+      if (possibleTag.equals("[tt") || possibleTag.equals("tmdbid-") || possibleTag.equals("tvdbid-"))  {
         startIndex = output.indexOf("]") + 1;
       }
       int endIndex = output.substring(startIndex).indexOf("]") + 1 + startIndex;
