@@ -4,14 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bb1ce18b-917f-4e1a-ac53-1f83a3cb3bd8" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/jellyfin/InputCheck.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/jellyfin/InputCheck.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/jellyfin/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/jellyfin/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/jellyfin/TerminalCommands.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/jellyfin/TerminalCommands.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/org/jellyfin/InputCheckTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/org/jellyfin/InputCheckTest.java" afterDir="false" />
-    </list>
+    <list default="true" id="bb1ce18b-917f-4e1a-ac53-1f83a3cb3bd8" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
