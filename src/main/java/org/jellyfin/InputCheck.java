@@ -170,7 +170,7 @@ public class InputCheck {
         if (possibleTag.substring(1, 3).equals("tt")) {
           idTag = possibleTag;
         }
-        else if (possibleTag.substring(0,7).equals("tmdbid") || possibleTag.substring(0,7).equals("tvdbid")) {
+        else if (possibleTag.substring(1,7).equals("tmdbid") || possibleTag.substring(1,7).equals("tvdbid")) {
           idTag = possibleTag;
         }
       } catch (IndexOutOfBoundsException e) {

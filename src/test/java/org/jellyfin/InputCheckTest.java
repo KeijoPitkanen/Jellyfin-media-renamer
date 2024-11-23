@@ -27,7 +27,10 @@ public class InputCheckTest {
             ic.runAllParsers("Indiana jones (2018) [tt7562112] [hdtv]", false, false));
     assertEquals("American Horror Story - S03E01 - Bitchcraft.mkv",
             ic.runAllParsers("American Horror Story (2011) - S03E01 - Bitchcraft (1080p BluRay x265 RZeroX).mkv", true, true));
-
+    assertEquals("Movie (2018) [tmdbid-7562112]",
+            ic.runAllParsers("Movie (2018) [tmdbid-7562112] [hdtv]", false, false));
+    assertEquals("Movie (2018) [tvdbid-7562112]",
+            ic.runAllParsers("Movie (2018) [tvdbid-7562112] [hdtv]", false, false));
     System.out.println("All tests have been run");
 
   }
