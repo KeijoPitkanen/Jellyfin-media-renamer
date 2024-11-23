@@ -4,7 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bb1ce18b-917f-4e1a-ac53-1f83a3cb3bd8" name="Changes" comment="" />
+    <list default="true" id="bb1ce18b-917f-4e1a-ac53-1f83a3cb3bd8" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/jellyfin/InputCheck.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/jellyfin/InputCheck.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/jellyfin/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/jellyfin/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/jellyfin/TerminalCommands.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/jellyfin/TerminalCommands.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/org/jellyfin/InputCheckTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/org/jellyfin/InputCheckTest.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -13,10 +20,10 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "customColor": "",
-  "associatedIndex": 7
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 7
+}</component>
   <component name="ProjectId" id="2pAymN1JWVAsko0F1HxQlTPAoPz" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -24,6 +31,8 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Application.Main.executor": "Run",
+    "JUnit.InputCheckTest.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "git-widget-placeholder": "dev",
@@ -53,5 +62,30 @@
       <updated>1732223333629</updated>
     </task>
     <servers />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/src/main/java/org/jellyfin/TerminalCommands.java</url>
+          <line>118</line>
+          <properties class="org.jellyfin.TerminalCommands" method="isEpisode">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/test/java/org/jellyfin/InputCheckTest.java</url>
+          <line>28</line>
+          <option name="timeStamp" value="9" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/jellyfin/InputCheck.java</url>
+          <line>323</line>
+          <option name="timeStamp" value="24" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

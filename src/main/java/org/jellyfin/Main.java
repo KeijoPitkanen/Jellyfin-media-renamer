@@ -10,3 +10,4 @@ public class Main {
     cli.runProgram();
   }
 }
+///home/skula/Documents/Code/java/Jellyfin-media-renamer/testing/active testing

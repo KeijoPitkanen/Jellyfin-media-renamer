@@ -22,7 +22,7 @@ A Movie Title (1968).mp4
 
 ## Goals for v2
 1. Add support for tmdb and tvdbid id tags. [DONE]
-2. Fix show renaming bug
+2. Fix show renaming bug. [DONE]
 3. Add renaming possibility for .srt files
 4. Get consent for deleting files
 
