@@ -1,7 +1,5 @@
 package org.jellyfin;
 
-//TODO add proper way to format .srt files
-
 public class InputCheck {
   /**
   *Run all parsers for the input String
@@ -34,8 +32,7 @@ public class InputCheck {
       input = parenthesisTheYear(input);
     }
     input = removeTags(input);
-    //input = removeNonimdbTags(input);
-    //input = deleteRestOfTags(input);
+
     input = deleteLastSpace(input);
     if (input.contains(seasonEpisode) == false) {
       input = input + ' ' + seasonEpisode;
@@ -156,16 +153,18 @@ public class InputCheck {
     }
     return output;
   }
+  /**
+   * Removes all of the tags from the file/dir name and formats it to comply with rules of jellyfin
+   * @param path local name of file/dir
+   * @return trimmed local name of file/dir in this format "Movie (1999) [idtag]
+   */
   private String removeTags(String path)  {
-    String year = null;
     String idTag = null;
     StringBuilder output = new StringBuilder(path);
-    int endpoint = 0;
     int startIndex = output.indexOf("[");
     int endIndex = output.indexOf("]");
     while (startIndex != -1)  {
       String possibleTag = output.substring(startIndex, endIndex + 1);
-      //Try
       try {
         if (possibleTag.substring(1, 3).equals("tt")) {
           idTag = possibleTag;
@@ -186,7 +185,7 @@ public class InputCheck {
       String possibleYear = output.substring(startIndex, endIndex + 1);
       try {
         if (isYear(possibleYear.substring(1, 5))) {
-          year = possibleYear;
+          //if the year is found it will delete anything in the local name that is after the year
           output.delete(endIndex + 1, output.length());
           break;
         }
@@ -201,33 +200,6 @@ public class InputCheck {
       output.append(" ");
       output.append(idTag);
 
-    }
-    return output.toString();
-  }
-  /**
-   * InputCheck.runAllParsers()
-   * @param input = file/dir local name
-   * @return file/dir name which has had all the tags removed i.e. movie [zmovies] [tt100123] -> movie [tt100123]
-   */
-  private String removeNonimdbTags(String input) {
-    StringBuilder output = new StringBuilder(input);
-    int startIndex = output.indexOf("[");
-    int endIndex = output.indexOf("]");
-
-    String idTag = null;
-    while(startIndex != -1)  {
-      //checks if tag is imdb id tag. If so skips it
-      String possibleTag = output.substring(startIndex, startIndex + 3);
-      if (possibleTag.equals("[tt") || possibleTag.equals("tmdbid-") || possibleTag.equals("tvdbid-"))  {
-        idTag = output.substring(startIndex, endIndex + 1);
-      }
-      output.delete(startIndex, endIndex + 1);
-      startIndex = output.indexOf("[");
-      endIndex = output.indexOf("]");
-    }
-    if (idTag != null)  {
-      output.append(" ");
-      output.append(idTag);
     }
     return output.toString();
   }
@@ -248,7 +220,6 @@ public class InputCheck {
         if (hasSpecifiedChar(input, startIndex))  {
           output.insert(startIndex, '(');
           output.insert(startIndex + 5, ')');
-
           return output.toString();
         }
       }
@@ -289,32 +260,6 @@ public class InputCheck {
       return false;
     }
   }
-  /**
-   * This method removes all the tags
-   * @param input local file/dir name
-   * @return the input with all the tags removed
-   */
-  private String deleteRestOfTags(String input) {
-    StringBuilder output = new StringBuilder(input);
-    int startIndex = input.indexOf('(');
-    int endIndex = input.indexOf(')');
-    String year = null;
-    //This code could be better and clearer
-    while (startIndex != -1) {
-      if (isYear(input.substring(startIndex + 1)))  {
-          year = input.substring(startIndex, startIndex + 5);
-          output.delete(startIndex, endIndex + 1);
-      }
-
-      startIndex = output.indexOf("(");
-      endIndex = output.indexOf(")");
-    }
-    if (year != null) {
-      output.append(year);
-    }
-    return output.toString();
-  }
-
 
   private String deleteYear(String path)  {
     StringBuilder output = new StringBuilder(path);
@@ -330,5 +275,4 @@ public class InputCheck {
     }
     return output.toString();
   }
-
 }
