@@ -1,7 +1,5 @@
 package org.jellyfin;
 
-//TODO add proper way to format .srt files
-
 public class InputCheck {
   /**
   *Run all parsers for the input String
@@ -11,26 +9,68 @@ public class InputCheck {
   * @return the file name which has been stripped of all unnecessary junk, ie
    * Violet Evergarden[BD][1080p][HEVC 10bit x265][Dual Audio][Tenrai-Sensei] -> Violet Evergarden
   */
-  protected String runAllParsers(String input, boolean isFile) {
+  protected String runAllParsers(String input, boolean isFile, boolean isEpisode) {
     String fileExtension = "";
     //Remove file extension only if the input is a file name. For directories skip
-    if (isFile == true) {
+    if (isFile) {
       // delete file extension from input and save it as its own variable so it can be added in the end
       fileExtension = getFileExtension(input);
       //if the file is a subtitle file do not make changes because jellyfin uses '.' in file extensions
       if (fileExtension.equals(".srt")) {
         return input;
       }
-
       input = removeFileExtension(input);
     }
-    // Run the rest of the parsers
+    String seasonEpisode = "";
+
+    // Run the parsers
     input = changeDotsToSpaces(input);
-    input = parenthesisTheYear(input);
-    input = removeNonimdbTags(input);
-    input = deleteRestOfTags(input);
+    if (isEpisode)  {
+      seasonEpisode = getSeasonEpisode(input);
+      input = deleteYear(input);
+    } else {
+      input = parenthesisTheYear(input);
+    }
+    input = removeTags(input);
+
     input = deleteLastSpace(input);
+    if (input.contains(seasonEpisode) == false) {
+      input = input + ' ' + seasonEpisode;
+    }
     return input + fileExtension;
+  }
+
+  /**
+   * Get Season and Episode from show episode file
+   * @param path local name of file
+   * @return Return season and episode tag -> SxxExx
+   */
+  private String getSeasonEpisode(String path) {
+    String pathLowerCase = path.toLowerCase();
+    String season = null;
+    String episode = null;
+    String output = "";
+
+    int count = 0;
+    while (count < pathLowerCase.length())  {
+      if (pathLowerCase.charAt(count) == 's') {
+        if (Character.isDigit(path.charAt(count + 1)) && Character.isDigit(path.charAt(count + 2))) {
+          season = path.substring(count, count + 3);
+        }
+      }
+      if (pathLowerCase.charAt(count) == 'e') {
+        if (Character.isDigit(path.charAt(count + 1)) && Character.isDigit(path.charAt(count + 2))) {
+          episode = path.substring(count, count + 3);
+          break;
+        }
+      }
+      count++;
+    }
+
+    if (season != null && episode != null)  {
+      output = season + episode;
+    }
+    return output;
   }
   /**
   * This code should only be run for files. It will throw an error for directories always
@@ -114,24 +154,52 @@ public class InputCheck {
     return output;
   }
   /**
-   * InputCheck.runAllParsers()
-   * @param input = file/dir local name
-   * @return file/dir name which has had all the tags removed i.e. movie [zmovies] [tt100123] -> movie [tt100123]
+   * Removes all of the tags from the file/dir name and formats it to comply with rules of jellyfin
+   * @param path local name of file/dir
+   * @return trimmed local name of file/dir in this format "Movie (1999) [idtag]
    */
-  private String removeNonimdbTags(String input) {
-    int startIndex = 0;
-    //redundant
-    StringBuilder output = new StringBuilder(input);
-    while(output.substring(startIndex).contains("["))  {
-      startIndex = output.indexOf("[");
-      //checks if tag is imdb id tag. If so skips it
-      String possibleTag = output.substring(startIndex, startIndex + 3);
-      if (possibleTag.equals("[tt") || possibleTag.equals("tmdbid-") || possibleTag.equals("tvdbid-"))  {
-        startIndex = output.indexOf("]") + 1;
+  private String removeTags(String path)  {
+    String idTag = null;
+    StringBuilder output = new StringBuilder(path);
+    int startIndex = output.indexOf("[");
+    int endIndex = output.indexOf("]");
+    while (startIndex != -1)  {
+      String possibleTag = output.substring(startIndex, endIndex + 1);
+      try {
+        if (possibleTag.substring(1, 3).equals("tt")) {
+          idTag = possibleTag;
+        }
+        else if (possibleTag.substring(1,7).equals("tmdbid") || possibleTag.substring(1,7).equals("tvdbid")) {
+          idTag = possibleTag;
+        }
+      } catch (IndexOutOfBoundsException e) {
+        //should correct itself when the possible tag  is deleted
       }
-      int endIndex = output.substring(startIndex).indexOf("]") + 1 + startIndex;
-      //delete tag
-      output.delete(startIndex, endIndex);
+      output.delete(startIndex, endIndex + 1);
+      startIndex = output.indexOf("[");
+      endIndex = output.indexOf("]");
+    }
+    startIndex = output.indexOf("(");
+    endIndex = output.indexOf(")");
+    while (startIndex != -1)  {
+      String possibleYear = output.substring(startIndex, endIndex + 1);
+      try {
+        if (isYear(possibleYear.substring(1, 5))) {
+          //if the year is found it will delete anything in the local name that is after the year
+          output.delete(endIndex + 1, output.length());
+          break;
+        }
+      } catch (IndexOutOfBoundsException e) {
+        //should correct itself when the possible tag  is deleted
+      }
+      output.delete(startIndex, endIndex + 1);
+      startIndex = output.indexOf("(");
+      endIndex = output.indexOf(")");
+    }
+    if (idTag != null)  {
+      output.append(" ");
+      output.append(idTag);
+
     }
     return output.toString();
   }
@@ -184,47 +252,27 @@ public class InputCheck {
    */
   private boolean isYear(String input)  {
     //these specific checks for index 0 and 1 are used because they reduce the amount of false positives with movie titles
-    if (input.charAt(0) == '2' || input.charAt(0) == '1') {
-      if (input.charAt(1) == '9' || input.charAt(1) == '0') {
-          return Character.isDigit(input.charAt(2)) && Character.isDigit(input.charAt(3));
-      }
+    if (input.charAt(0) == '2' && input.charAt(1) == '0') {
+      return Character.isDigit(input.charAt(2)) && Character.isDigit(input.charAt(3));
+    } else if (input.charAt(0) == '1' && input.charAt(1) == '9')  {
+      return Character.isDigit(input.charAt(2)) && Character.isDigit(input.charAt(3));
+    } else {
+      return false;
     }
-    return false;
   }
-  /**
-   * This method removes all the tags
-   * @param input local file/dir name
-   * @return the input with all the tags removed
-   */
-  private String deleteRestOfTags(String input) {
-    int startIndex = 1;
-    int endIndex = 2;
-    int year = 0;
-    //This code could be better and clearer
-    while (endIndex < input.length()) {
-      if (input.charAt(startIndex) == '(') {
-        try {
-          year = Integer.parseInt(input.substring(startIndex + 1, endIndex + 4));
-        } catch (NumberFormatException e) {
-          //TODO
-        }
-      }
-      startIndex++;
-      endIndex = startIndex + 1;
-      if (year != 0) {
+
+  private String deleteYear(String path)  {
+    StringBuilder output = new StringBuilder(path);
+    int count = 1;
+    while (count < path.length() - 3) {
+      if (isYear(path.substring(count, count + 4))) {
+        if (hasSpecifiedChar(path, count - 1))  {output.delete(count - 1, count + 5);
+        } else if (path.charAt(count - 1) == '(' && path.charAt(count + 4) == ')') {output.delete(count - 2, count + 5);
+        } else {output.delete(count, count+3);}
         break;
       }
+      count++;
     }
-
-    endIndex = input.indexOf(')');
-    //This will check if the imbd tag is before or after the year
-    if (endIndex < input.indexOf(']'))  {
-      endIndex = input.indexOf(']');
-    }
-      if (endIndex != -1) {
-          input = input.substring(0, endIndex + 1);
-      }
-      return input;
+    return output.toString();
   }
-
 }

@@ -6,7 +6,7 @@ import java.util.Scanner;
 import java.util.Stack;
 
 public class TerminalCommands extends InputCheck{
-    /**
+    /**TODO REFACTOR THIS
      *Changes the name of a single file/dir to comply with Jellyfin formatting
      * @param path = absolute file path
      * @throws IOException from ProcessBuilder.startPipeline
@@ -26,7 +26,8 @@ public class TerminalCommands extends InputCheck{
                 }
             }
         }
-        String newLocalName = runAllParsers(localName, currentFile.isFile());
+
+        String newLocalName = runAllParsers(localName, currentFile.isFile(), isEpisode(path));
         String newPath = path.substring(0, path.lastIndexOf('/') + 1) + newLocalName;
         //check if file exists
         File newFile = new File(newPath);
@@ -109,6 +110,18 @@ public class TerminalCommands extends InputCheck{
             }
         }
         return false;
+    }
+    /**
+     * Check if current file is a season directory for a show etc.
+     * @param path absolute path to directory
+     * @return true if path contains string "season" ignoring case
+     */
+    private boolean isEpisode(String path) {
+        int encPoint = path.lastIndexOf('/');
+        int startPoint = path.substring(0, encPoint).lastIndexOf('/') + 1;
+        String seasonTag = path.substring(startPoint, encPoint).toLowerCase();
+
+        return seasonTag.contains("season");
     }
 
     /**
