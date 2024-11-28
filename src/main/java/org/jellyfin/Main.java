@@ -1,6 +1,7 @@
 package org.jellyfin;
 
 import java.io.IOException;
+import java.util.Scanner;
 
 public class Main {
   public static void main(String[] args) throws IOException {
@@ -8,4 +9,6 @@ public class Main {
     CLI cli = new CLI();
     cli.runProgram();
   }
+
+
 }

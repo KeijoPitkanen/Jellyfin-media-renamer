@@ -1,5 +1,5 @@
 # Jellyfin-Media-Renamer (JellyMR)
-Current release is v1
+Current release is v1.2
 This java program was created to rename downloaded or misnamed files to comply with the rules of Jellyfin for names of shows, movies and .srt subtitle files. If you have manually configured all of the shows to work with special suffixes it is not recommended to use this.
 
 ## What does this program do exactly:
@@ -21,10 +21,10 @@ A Movie Title (1968).mp4
 2. If tv show is named in this way it will name one of the episodes by the shows name and not rename the rest of them.
 
 ## Goals for v2
-1. Add support for tmdb and tvdbid id tags. [DONE]
-2. Fix show renaming bug. [DONE]
-3. Add renaming possibility for .srt files
-4. Get consent for deleting files
+1. Add support for tmdb and tvdbid id tags. [DONE] v1.1 
+2. Fix show renaming bug. [DONE] v1.2
+3. Add renaming possibility for .srt files 
+4. Get consent for deleting files [WIP]
 
 
 ## The Jellyfin Project:

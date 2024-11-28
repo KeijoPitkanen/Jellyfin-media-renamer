@@ -32,7 +32,6 @@ public class InputCheck {
       input = parenthesisTheYear(input);
     }
     input = removeTags(input);
-
     input = deleteLastSpace(input);
     if (input.contains(seasonEpisode) == false) {
       input = input + ' ' + seasonEpisode;
@@ -260,7 +259,21 @@ public class InputCheck {
       return false;
     }
   }
-
+  /**
+   * Jellyfin has different naming conventions for .srt files so this is needed
+   * @param path absolute path to .srt file
+   * @return refactored .srt file
+   */
+  private String renemaeSrt(String path)  {
+    //Get corresponding file name
+    //rename to corresponding file while including dots and .srt file proberties
+    return null;
+  }
+  /**
+   * Delete year tag from show episodes
+   * @param path local path to file
+   * @return local path/dir path with the year deleted
+   */
   private String deleteYear(String path)  {
     StringBuilder output = new StringBuilder(path);
     int count = 1;
@@ -275,4 +288,5 @@ public class InputCheck {
     }
     return output.toString();
   }
+
 }

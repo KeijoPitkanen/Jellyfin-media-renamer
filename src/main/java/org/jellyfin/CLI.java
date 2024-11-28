@@ -2,6 +2,7 @@ package org.jellyfin;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Scanner;
 import java.util.Stack;
 
 //TODO add confirmation if the user wants files to be deleted
@@ -18,6 +19,7 @@ public class CLI extends TerminalCommands {
    * 6. rename all the subdirectories -> return to step 2
    */
   public void runProgram() throws IOException {
+    boolean consent = getConsent();
     System.out.println("Give the path to the jellyfin library folder you would want to format");
     //step 0
     String pathToJellyfin = getUserInput();
@@ -26,28 +28,41 @@ public class CLI extends TerminalCommands {
       System.out.println(jellyfinDir + " is not a directory");
       return;
     }
-
-    helperRunProgram(pathToJellyfin);
+    helperRunProgram(pathToJellyfin, consent);
   }
   /**
    * Used in runProgram()
    * @param path absolute path to file/dir
    * @throws IOException from TerminalCommands methods
    */
-  public void helperRunProgram(String path) throws IOException  {
+  public void helperRunProgram(String path, boolean consent) throws IOException  {
     //step 1
     Stack<String> subDirectories = getDirs(path);
     while (subDirectories.isEmpty() == false) {
       //step 2
-      helperRunProgram(subDirectories.pop());
+      helperRunProgram(subDirectories.pop(), consent);
     }
     //step 3
     Stack<String> files = getFiles(path);
     //step 4
-    while (files.isEmpty() == false)  {rename(files.pop());}
+    while (files.isEmpty() == false)  {rename(files.pop(), consent);}
     //step 5
     subDirectories = getDirs(path);
     //step 6
-    for (String directory : subDirectories) {rename(directory);}
+    for (String directory : subDirectories) {rename(directory, consent);}
+  }
+  /**TODO test
+   * @return if 'Y' return true, else return false
+   */
+  private boolean getConsent()  {
+    System.out.println("Allow JMR to delete useless files such as .exe and pictures (y/n)");
+    return getUserInput().equalsIgnoreCase("y");
+  }
+  /**
+   * @return user text input from terminal
+   */
+  protected String getUserInput() {
+    Scanner input = new Scanner(System.in);
+    return input.nextLine();
   }
 }

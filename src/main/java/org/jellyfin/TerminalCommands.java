@@ -11,18 +11,29 @@ public class TerminalCommands extends InputCheck{
      * @param path = absolute file path
      * @throws IOException from ProcessBuilder.startPipeline
      */
-    protected void rename(String path) throws IOException  {
+    protected void rename(String path, boolean consent) throws IOException  {
         //Path = /home/user/code.txt -> localName = code.txt
         String localName = path.substring(path.lastIndexOf('/') + 1);
         //This is only used to check if the file is a file or directory
         File currentFile = new File(path);
         if (currentFile.isFile())   {
-            if (isUselessFile(path))    {
-                if (deleteUselessFile(path) == false)    {
-                    throw new RuntimeException("Jellyfin-media-renamer does not have permissions to delete " + path);
-                } else {
-                    System.out.println(path + " DELETED");
-                    return;
+            if (consent)    {
+                if (isUselessFile(path))    {
+                    if (deleteUselessFile(path) == false)    {
+                        throw new RuntimeException("Jellyfin-media-renamer does not have permissions to delete " + path);
+                    } else {
+                        System.out.println(path + " DELETED");
+                        return;
+                    }
+                }
+            } else {
+                if (isUselessFile(path))    {
+                    if (deleteUselessFile(path) == false)   {
+                        throw new RuntimeException("Jellyfin-media-renamer does not have permissions to delete " + path);
+                    }   else    {
+                        System.out.println(path + " DELETED");
+                        return;
+                    }
                 }
             }
         }
@@ -76,13 +87,7 @@ public class TerminalCommands extends InputCheck{
         }
         return files;
     }
-    /**
-     * @return user text input from terminal
-     */
-    protected String getUserInput() {
-        Scanner input = new Scanner(System.in);
-        return input.nextLine();
-    }
+
     /**
      * Delete the file if they are not video or subtitle file i.e. .exe, .txt, .jpg, .png etc
      * @param path global dir path
@@ -95,7 +100,6 @@ public class TerminalCommands extends InputCheck{
             return false;
         }
     }
-
     /**
      * Check if file is useless and can be deleted
      * @param path Absolute path to file
@@ -123,22 +127,13 @@ public class TerminalCommands extends InputCheck{
 
         return seasonTag.contains("season");
     }
-
     /**
-     * @param oldName absolute path of file/dir
-     * @param newName new formatted absolute path of file/dir
-     * @param operation d -> delete r -> rename
-     * @return if 'Y' return true, else return false
+     * @return user text input from terminal
      */
-    private boolean getConsent(String oldName, String newName, char operation)  {
-        oldName = oldName.substring(oldName.lastIndexOf('/') + 1);
-        newName = newName.substring(newName.lastIndexOf('/') +1 );
-        String output = switch (operation) {
-            case 'r' -> "Rename '" + oldName + "' to '" + newName + "' (y/n)";
-            case 'd' -> "Delete file '" + oldName + "' (y/n";
-            default -> "Unknown operation for file/dir " + oldName;
-        };
-        System.out.println(output);
-        return getUserInput().equalsIgnoreCase("y") || getUserInput().isEmpty();
+    protected String getUserInput() {
+        Scanner input = new Scanner(System.in);
+        return input.nextLine();
     }
+
+
 }
