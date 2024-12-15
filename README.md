@@ -23,9 +23,10 @@ A Movie Title (1968).mp4
 ## Goals for v2
 1. Add support for tmdb and tvdbid id tags. [DONE] v1.1 
 2. Fix show renaming bug. [DONE] v1.2
-3. Add renaming possibility for .srt files 
-4. Get consent for deleting files [WIP]
+4. Get consent for deleting files DONE v1.3 [needs testing]
 
+## Possible features
+1. Support for renaming .srt files correctly.
 
 ## The Jellyfin Project:
 https://github.com/jellyfin/jellyfin
