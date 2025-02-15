@@ -2,52 +2,68 @@ package org.jellyfin;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Scanner;
 import java.util.Stack;
 
-//TODO add confirmation if the user wants files to be deleted
-
-public class CLI extends TerminalCommands {
+public class CLI extends FileOperations {
   /**
    * How the algorithm works
    * 0. get homepath of jellyfin library from user
    * 1. get stack of all the subdirectories in current directory
    * 2. Change current dir to first subdirectory -> return to step 1
-   * 3  get stack of all the files in current directory
+   * 3 get stack of all the files in current directory
    * 4. rename all the files
    * 5. get stack of all the subdirectories
    * 6. rename all the subdirectories -> return to step 2
    */
   public void runProgram() throws IOException {
+    Scanner input = new Scanner(System.in);
+    final boolean consent = getConsent(input);
     System.out.println("Give the path to the jellyfin library folder you would want to format");
-    //step 0
-    String pathToJellyfin = getUserInput();
+    // step 0
+    String pathToJellyfin = input.nextLine();
+    input.close();
     File jellyfinDir = new File(pathToJellyfin);
     if (jellyfinDir.isDirectory() == false) {
       System.out.println(jellyfinDir + " is not a directory");
-      return;
+    } else {
+      helperRunProgram(pathToJellyfin, consent);
     }
-
-    helperRunProgram(pathToJellyfin);
   }
+
   /**
    * Used in runProgram()
+   * 
    * @param path absolute path to file/dir
-   * @throws IOException from TerminalCommands methods
+   * @throws IOException from FileOperations methods
    */
-  public void helperRunProgram(String path) throws IOException  {
-    //step 1
+  private void helperRunProgram(String path, boolean consent) throws IOException {
+    // step 1
     Stack<String> subDirectories = getDirs(path);
     while (subDirectories.isEmpty() == false) {
-      //step 2
-      helperRunProgram(subDirectories.pop());
+      // step 2
+      helperRunProgram(subDirectories.pop(), consent);
     }
-    //step 3
+    // step 3
     Stack<String> files = getFiles(path);
-    //step 4
-    while (files.isEmpty() == false)  {rename(files.pop());}
-    //step 5
+    // step 4
+    while (files.isEmpty() == false) {
+      rename(files.pop(), consent);
+    }
+    // step 5
     subDirectories = getDirs(path);
-    //step 6
-    for (String directory : subDirectories) {rename(directory);}
+    // step 6
+    for (String directory : subDirectories) {
+      rename(directory, consent);
+    }
+  }
+
+  /**
+   * @param input System.in Scanner
+   * @return if 'Y' return true, else return false
+   */
+  private boolean getConsent(Scanner input) {
+    System.out.println("Allow JMR to delete useless files such as .exe, .txt, .jpg and .png files (y/n)");
+    return input.nextLine().equalsIgnoreCase("y");
   }
 }

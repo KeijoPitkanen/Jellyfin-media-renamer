@@ -9,7 +9,7 @@ public class InputCheckTest {
   @Test
   void testRunAllParsers() {
     System.out.println("Starting test on all parsers");
-    var ic = new InputCheck();
+    var ic = new NameCheck();
 
     assertEquals("2001 A Space Odyssey (1968).mp4",
             ic.runAllParsers("2001.A.Space.Odyssey.1968.1080p.BluRay.x264-[YTS.AM].mp4", true, false));
