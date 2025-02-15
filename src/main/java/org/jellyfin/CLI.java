@@ -59,7 +59,6 @@ public class CLI extends FileOperations {
   }
 
   /**
-   * TODO test
    * @param input System.in Scanner
    * @return if 'Y' return true, else return false
    */

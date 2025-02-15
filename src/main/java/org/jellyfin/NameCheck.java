@@ -82,7 +82,6 @@ public class NameCheck {
       }
       count++;
     }
-
     if (season != null && episode != null) {
       output = season + episode;
     }
