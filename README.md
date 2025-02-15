@@ -7,7 +7,7 @@ This java program was created to rename downloaded or misnamed files to comply w
 3. Paranthesises the year
 4. Deletes "useless" files -> files that are .exe, .txt, .jpg or png.
 
-##JMR does not support renaming .srt files for now
+## JMR does not support renaming .srt files for now
 
 Original file name
 
