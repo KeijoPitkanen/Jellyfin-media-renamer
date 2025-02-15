@@ -5,9 +5,7 @@ import java.io.IOException;
 import java.util.Scanner;
 import java.util.Stack;
 
-//TODO add confirmation if the user wants files to be deleted
-
-public class CLI extends TerminalCommands {
+public class CLI extends FileOperations {
   /**
    * How the algorithm works
    * 0. get homepath of jellyfin library from user
@@ -19,23 +17,25 @@ public class CLI extends TerminalCommands {
    * 6. rename all the subdirectories -> return to step 2
    */
   public void runProgram() throws IOException {
-    boolean consent = getConsent();
+    Scanner input = new Scanner(System.in);
+    final boolean consent = getConsent(input);
     System.out.println("Give the path to the jellyfin library folder you would want to format");
     // step 0
-    String pathToJellyfin = getUserInput();
+    String pathToJellyfin = input.nextLine();
+    input.close();
     File jellyfinDir = new File(pathToJellyfin);
     if (jellyfinDir.isDirectory() == false) {
       System.out.println(jellyfinDir + " is not a directory");
-      return;
+    } else {
+      helperRunProgram(pathToJellyfin, consent);
     }
-    helperRunProgram(pathToJellyfin, consent);
   }
 
   /**
    * Used in runProgram()
    * 
    * @param path absolute path to file/dir
-   * @throws IOException from TerminalCommands methods
+   * @throws IOException from FileOperations methods
    */
   private void helperRunProgram(String path, boolean consent) throws IOException {
     // step 1
@@ -60,19 +60,11 @@ public class CLI extends TerminalCommands {
 
   /**
    * TODO test
-   * 
+   * @param input System.in Scanner
    * @return if 'Y' return true, else return false
    */
-  private boolean getConsent() {
-    System.out.println("Allow JMR to delete useless files such as .exe and pictures (y/n)");
-    return getUserInput().equalsIgnoreCase("y");
-  }
-
-  /**
-   * @return user text input from terminal
-   */
-  private String getUserInput() {
-    Scanner input = new Scanner(System.in);
-    return input.nextLine();
+  private boolean getConsent(Scanner input) {
+    System.out.println("Allow JMR to delete useless files such as .exe, .txt, .jpg and .png files (y/n)");
+    return input.nextLine().equalsIgnoreCase("y");
   }
 }

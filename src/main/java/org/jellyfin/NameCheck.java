@@ -1,9 +1,9 @@
 package org.jellyfin;
 
-public class InputCheck {
+public class NameCheck {
   /**
    * Run all parsers for the input String
-   * Used in TerminalCommands.changeName()
+   * Used in FileOperations.changeName()
    * 
    * @param input  = file/directory local name
    * @param isFile = True if input is the name of a file
@@ -46,13 +46,11 @@ public class InputCheck {
    * This code should only be run for files. It will throw an error for
    * directories always
    * Used in:
-   * InputCheck.runAllParsers()
+   * NameCheck.runAllParsers()
    * 
    * @param input = file local name
    * @return the file extension, ie .mp4
    */
-  protected String name;
-
   String getFileExtension(String input) {
     return input.substring(input.lastIndexOf('.'));
   }
@@ -94,7 +92,7 @@ public class InputCheck {
   /**
    * This code should only be run for files
    * used in:
-   * InputCheck.runAllParsers()
+   * NameCheck.runAllParsers()
    * 
    * @param input = file local name
    * @return the file name without the file extension, ie movie.mp4 -> movie
@@ -110,7 +108,7 @@ public class InputCheck {
    * Used to check if the year in input has one of the specified chars enclosing
    * the year. ie {2024} or [2024]
    * Used in:
-   * InputCheck.parenthesisTheYear()
+   * NameCheck.parenthesisTheYear()
    * 
    * @param input      = file/dir local name
    * @param startIndex = index of the millenium number of the year
@@ -140,7 +138,7 @@ public class InputCheck {
 
   /**
    * Used in:
-   * InputCheck.runAllParsers()
+   * NameCheck.runAllParsers()
    * 
    * @param input local file/dir name
    * @return file/dir name where the name dots have been changed to spaces, ie
@@ -156,7 +154,7 @@ public class InputCheck {
    * Because some parsers sometimes leaves a space as a last character this method
    * must be used.
    * Used in:
-   * InputCheck.runAllParsers
+   * NameCheck.runAllParsers
    * 
    * @param input = local file/dir name
    * @return file/dir name with the last character not being space, ie "movie " ->
@@ -174,11 +172,11 @@ public class InputCheck {
   }
 
   /**
-   * Removes all of the tags from the file/dir name and formats it to comply with
+   * Removes all the tags from the file/dir name and formats it to comply with
    * rules of jellyfin
    * 
    * @param path local name of file/dir
-   * @return trimmed local name of file/dir in this format "Movie (1999) [idtag]
+   * @return trimmed local name of file/dir in this format "Movie (1999) [idtag]"
    */
   private String removeTags(String path) {
     String idTag = null;
@@ -228,7 +226,7 @@ public class InputCheck {
 
   /**
    * Used in:
-   * InputCheck.runAllParcers
+   * NameCheck.runAllParcers
    * 
    * @param input = local file/dir name
    * @return file/dir name with the year parenthesised, ie movie 2024 -> movie
@@ -272,7 +270,7 @@ public class InputCheck {
 
   /**
    * Used in:
-   * InputCheck.parenthesisTheYear
+   * NameCheck.parenthesisTheYear
    * 
    * @param input = four character long input
    * @return true if input is a year in the format yyyy

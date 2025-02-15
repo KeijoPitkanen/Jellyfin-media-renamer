@@ -3,10 +3,9 @@ package org.jellyfin;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Scanner;
 import java.util.Stack;
 
-public class TerminalCommands extends InputCheck {
+public class FileOperations extends NameCheck {
   /**
    * Changes the name of a single file/dir to comply with Jellyfin formatting
    * 
@@ -20,15 +19,6 @@ public class TerminalCommands extends InputCheck {
     File currentFile = new File(path);
     if (currentFile.isFile()) {
       if (consent) {
-        if (isUselessFile(path)) {
-          if (deleteUselessFile(path) == false) {
-            throw new RuntimeException("Jellyfin-media-renamer does not have permissions to delete " + path);
-          } else {
-            System.out.println(path + " DELETED");
-            return;
-          }
-        }
-      } else {
         if (isUselessFile(path)) {
           if (deleteUselessFile(path) == false) {
             throw new RuntimeException("Jellyfin-media-renamer does not have permissions to delete " + path);
