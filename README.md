@@ -1,4 +1,4 @@
-# Jellyfin-Media-Renamer (JellyMR)
+# Jellyfin-Media-Renamer (JMR)
 This java program was created to rename downloaded or misnamed files to comply with the rules of Jellyfin for names of shows, movies and .srt subtitle files. If you have manually configured all of the shows to work with special suffixes it is not recommended to use this.
 
 ## What does this program do exactly:
