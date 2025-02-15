@@ -1,5 +1,4 @@
 # Jellyfin-Media-Renamer (JellyMR)
-Current release is v1.2
 This java program was created to rename downloaded or misnamed files to comply with the rules of Jellyfin for names of shows, movies and .srt subtitle files. If you have manually configured all of the shows to work with special suffixes it is not recommended to use this.
 
 ## What does this program do exactly:
@@ -8,7 +7,7 @@ This java program was created to rename downloaded or misnamed files to comply w
 3. Paranthesises the year
 4. Deletes "useless" files -> files that are .exe, .txt, .jpg or png.
 
-JMR v1 does not support renaming .srt files
+##JMR does not support renaming .srt files for now
 
 Original file name
 
