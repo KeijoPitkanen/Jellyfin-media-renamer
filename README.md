@@ -7,8 +7,6 @@ This java program was created to rename downloaded or misnamed files to comply w
 3. Paranthesises the year
 4. Deletes "useless" files -> files that are .exe, .txt, .jpg or png.
 
-## JMR does not support renaming .srt files for now
-
 Original file name
 
 A.Movie.Title.1968.1080p.BluRay.x264-[Torrent.site].mp4
@@ -16,6 +14,9 @@ A.Movie.Title.1968.1080p.BluRay.x264-[Torrent.site].mp4
 After running JMR
 
 A Movie Title (1968).mp4
+
+JMR does not support renaming .srt files for now
+
 
 ## Known bugs v1.1
 1. Doesn't work for tv-episodes if they include the year before episode name/index i.e. "Show (2020) S01E01" will not work. This is also against Jellyfin naming rules
