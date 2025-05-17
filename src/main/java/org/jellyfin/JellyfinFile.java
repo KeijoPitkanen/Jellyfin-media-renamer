@@ -1,6 +1,7 @@
 package org.jellyfin;
 
 import java.io.File;
+import java.util.LinkedList;
 
 public class JellyfinFile extends File {
   private String title = "";
@@ -43,10 +44,9 @@ public class JellyfinFile extends File {
   /**
    * @return true if file is of "useless" type ie. .ext, .txt, .jpg, .png
    */
-  public boolean isUselessFile() {
+  public boolean isUselessFile(LinkedList<String> uselessFileFormats) {
     if (isFile()) {
-      String[] formats = { ".exe", ".txt", ".jpg", ".png" };
-      for (String format : formats) {
+      for (String format : uselessFileFormats) {
         if (fileExtension.equals(format)) {
           return true;
         }
@@ -57,16 +57,16 @@ public class JellyfinFile extends File {
 
   /**
    * Rename the file to comply with jellyfin naming scheme
-   * 
+   *
    * @return the absolutpath of the new renamed file or the old name if the file
    *         could not be renamed
    */
-  public String renameToJellyfinFormat() {
+  public String getJellyfinFormatName() {
     setReleaseYear();
     setTitle();
     setDBTag();
-
     StringBuilder newName = new StringBuilder();
+
     newName.append(getParent());
     newName.append("/");
     newName.append(title);
@@ -106,11 +106,40 @@ public class JellyfinFile extends File {
       removeUselessTagsFromTitle();
       return;
     }
-    title = getName();
+    if (isDirectory())  {
+      if (formatSeasonTagOfDir() != true) {
+        title = getName();
+      }
+    } else {
+      title = getName().substring(0, getName().lastIndexOf('.'));
+    }
     removeUselessTagsFromTitle();
     title = title.replace('.', ' ');
     if (title.charAt(title.length() - 1) == ' ') {
       title = title.substring(0, title.length() - 1);
+    }
+
+  }
+
+  private boolean formatSeasonTagOfDir()  {
+    String localName = getName();
+    String pathLowerCase = localName.toLowerCase();
+    String season = null;
+    int count = 0;
+    while (count + 2 < pathLowerCase.length()) {
+      if (pathLowerCase.charAt(count) == 's') {
+        if (Character.isDigit(localName.charAt(count + 1)) && Character.isDigit(localName.charAt(count + 2))) {
+          season = localName.substring(count + 1, count + 3);
+          break;
+        }
+      }
+      count++;
+    }
+    if (season != null) {
+      title = getName().substring(0,count) + "Season " + season;
+      return true;
+    } else {
+      return false;
     }
   }
 
@@ -135,6 +164,8 @@ public class JellyfinFile extends File {
       title = title.substring(0, indexOfChar);
     }
   }
+
+
 
   /**
    * set database tag to variable ie get imdb, tmdbid or tvdbid tag from name if
@@ -197,7 +228,7 @@ public class JellyfinFile extends File {
 
   /**
    * Checks for years between 1800-2099
-   * 
+   *
    * @param input = four character long input
    * @return true if input is a year in the format yyyy
    */
@@ -221,6 +252,8 @@ public class JellyfinFile extends File {
       fileExtension = localName.substring(localName.lastIndexOf('.'));
     }
   }
+
+
 
   /**
    * Set Season and Episode tag from episode file name

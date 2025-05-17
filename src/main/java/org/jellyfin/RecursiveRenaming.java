@@ -1,37 +1,66 @@
 package org.jellyfin;
 
-import java.io.IOException;
+import java.io.File;
+import java.io.FileWriter;
+import java.util.HashSet;
 import java.util.Scanner;
 import java.util.Stack;
 
 public class RecursiveRenaming {
 
-  /**
-   * runs the CLI version of the program
-   */
-  public void runProgram() throws IOException {
-    System.out.println('\n' +
-        "       _  __  __  _____     _                                    _               " + '\n' +
-        "      | ||  \\/  ||  __ \\   (_)                                  (_)              " + '\n' +
-        "      | || \\  / || |__) |   _  ___    _ __  _   _  _ __   _ __   _  _ __    __ _ " + '\n' +
-        "  _   | || |\\/| ||  _  /   | |/ __|  | '__|| | | || '_ \\ | '_ \\ | || '_ \\  / _` |" + '\n' +
-        " | |__| || |  | || | \\ \\   | |\\__ \\  | |   | |_| || | | || | | || || | | || (_| |" + '\n' +
-        "  \\____/ |_|  |_||_|  \\_\\  |_||___/  |_|    \\__,_||_| |_||_| |_||_||_| |_| \\__, |" + '\n' +
-        "                                                                            __/ |" + '\n' +
-        "                                                                           |___/ " + '\n');
-    Scanner input = new Scanner(System.in);
-    final boolean consent = getConsent(input);
-    System.out.println("Give the path to the jellyfin library folder you would want to format");
-    String pathToMediaRootDir = input.nextLine();
-    input.close();
 
-    JellyfinFile mediaRootDir = new JellyfinFile(pathToMediaRootDir);
+  /**
+   * starts the CLI program and start to requirsivly rename files
+   *
+   * @param pathToJellyfinDir      absolute path to the directory where to start
+   *                               renaming
+
+   * @return returns true if pathToJellyfinDir is valide. Else retuns false
+   */
+  public static boolean runProgram(String pathToJellyfinDir) {
+    System.out.println('\n' +
+            "       _  __  __  _____     _                                    _               " + '\n' +
+            "      | ||  \\/  ||  __ \\   (_)                                  (_)              " + '\n' +
+            "      | || \\  / || |__) |   _  ___    _ __  _   _  _ __   _ __   _  _ __    __ _ " + '\n' +
+            "  _   | || |\\/| ||  _  /   | |/ __|  | '__|| | | || '_ \\ | '_ \\ | || '_ \\  / _` |" + '\n' +
+            " | |__| || |  | || | \\ \\   | |\\__ \\  | |   | |_| || | | || | | || || | | || (_| |" + '\n' +
+            "  \\____/ |_|  |_||_|  \\_\\  |_||___/  |_|    \\__,_||_| |_||_| |_||_||_| |_| \\__, |" + '\n' +
+            "                                                                            __/ |" + '\n' +
+            "                                                                           |___/ " + '\n');
+
+    JellyfinFile mediaRootDir = new JellyfinFile(pathToJellyfinDir);
 
     if (mediaRootDir.isDirectory()) {
-      recursiveRename(mediaRootDir, consent);
+      recursiveRename(mediaRootDir);
+      return true;
     } else {
       System.out.println(mediaRootDir + " is not a directory");
+      return false;
     }
+  }
+
+  /**
+   * gets previosly renamed files from a log.txt file by reading it and placing
+   * the names into a hashSet for quick lookup
+   *
+   * @param file log.txt file
+   * @return HashSet of all of the names in the log.txt file if there is an
+   *         exception catched the returned HashSet may be empty or missing items.
+   */
+  private static HashSet<String> getPrevioslyRenamedFiles(File file) {
+    HashSet<String> namedFiles = new HashSet<>();
+    if (file != null) {
+      try {
+        Scanner reader = new Scanner(file);
+        while (reader.hasNextLine()) {
+          namedFiles.add(reader.nextLine());
+        }
+        reader.close();
+      } catch (Exception e) {
+        System.out.println("A error occured while trying to get previoslyRenamedFiles from " + file.getAbsolutePath());
+      }
+    }
+    return namedFiles;
   }
 
   /*
@@ -44,14 +73,12 @@ public class RecursiveRenaming {
    */
 
   /**
-   * Recursivly rename all of the files and directories that are inside root and
-   * it's subdirectories
-   * 
-   * @param root
-   * @param consent true == delete useless files, false == don't delete useless
-   *                files
+   * Recursivly renames all of the files and subdirectories that are inside root.
+   *
+   * @param root               root directory of the Jellyfin library
+
    */
-  private void recursiveRename(JellyfinFile root, boolean consent) {
+  private static void recursiveRename(JellyfinFile root) {
     // Step1
     String currentPath = root.getAbsolutePath() + "/";
     String[] subDirectoriePaths = root.list();
@@ -62,40 +89,27 @@ public class RecursiveRenaming {
     for (String dirPath : subDirectoriePaths) {
       JellyfinFile currentFile = new JellyfinFile(currentPath + dirPath);
       // Step3
-      if (consent == true) {
-        if (currentFile.isUselessFile()) {
-          if (currentFile.delete()) {
-            System.out.println("Deleted file: " + currentFile.getAbsolutePath());
-          } else {
-            System.out.println("Failed to delete file: " + currentFile.getAbsolutePath());
-          }
-          continue;
-        }
-      }
+
+
       // TODO add support for .srt files
       if (currentFile.isSRTFile()) {
         subtitleFiles.push(currentFile);
         continue;
       }
       // Step4
-      JellyfinFile renamedFile = new JellyfinFile(currentFile.renameToJellyfinFormat());
+        JellyfinFile renamedFile = new JellyfinFile(currentFile.getJellyfinFormatName());
+        if (renamedFile.isDirectory()) {
+          subDirectories.push(renamedFile);
+        }
+
       // step5
-      if (renamedFile.isDirectory()) {
-        subDirectories.push(renamedFile);
+      if (currentFile.isDirectory()) {
+        subDirectories.push(currentFile);
       }
     }
     // Step6
     for (JellyfinFile subDirectory : subDirectories) {
-      recursiveRename(subDirectory, consent);
+      recursiveRename(subDirectory);
     }
-  }
-
-  /**
-   * @param input System.in Scanner
-   * @return if 'Y' return true, else return false
-   */
-  private boolean getConsent(Scanner input) {
-    System.out.println("Allow JMR to delete useless files such as .exe, .txt, .jpg and .png files (y/n)");
-    return input.nextLine().equalsIgnoreCase("y");
   }
 }

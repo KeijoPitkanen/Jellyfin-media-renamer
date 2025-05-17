@@ -27,10 +27,7 @@ public class JellyfinFileTest {
             files.add(file);
         }
 
-        for (JellyfinFile file : files) {
-            file.renameToJellyfinFormat();
-            
-        }
+
     }
 
 }
