@@ -45,11 +45,14 @@ public class JellyfinFile extends File {
             return getAbsolutePath();
         }
         File renamedFile = new File(newName.toString());
-        if (renameTo(renamedFile)) {
+        if (renamedFile.exists())   {
+            System.out.println("Failed to rename " + oldName);
+            return getAbsolutePath();
+        }
+        else if (renameTo(renamedFile)) {
             System.out.println(oldName + " renamed to " + newName);
             return newName.toString();
-        } else {
-            System.out.println("Failed to rename " + oldName);
+        }   else {
             return getAbsolutePath();
         }
     }
@@ -89,7 +92,6 @@ public class JellyfinFile extends File {
     }
     return false;
   }
-
 
   /**
    * Set te title variable

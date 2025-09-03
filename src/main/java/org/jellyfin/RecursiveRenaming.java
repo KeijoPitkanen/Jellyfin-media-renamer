@@ -77,6 +77,7 @@ public class RecursiveRenaming {
             continue;
           }
           // Step4
+
           JellyfinFile renamedFile = new JellyfinFile(currentFile.renameToJellyfinFormat());
           // step5
           if (renamedFile.isDirectory()) {
