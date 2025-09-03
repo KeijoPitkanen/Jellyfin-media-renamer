@@ -26,7 +26,6 @@ public class JellyfinFile extends File {
         setReleaseYear();
         setTitle();
         setDBTag();
-
         StringBuilder newName = new StringBuilder();
         newName.append(getParent());
         newName.append("/");
@@ -53,6 +52,8 @@ public class JellyfinFile extends File {
             System.out.println(oldName + " renamed to " + newName);
             return newName.toString();
         }   else {
+            System.out.println("Failed to rename " + oldName);
+
             return getAbsolutePath();
         }
     }
@@ -175,8 +176,6 @@ public class JellyfinFile extends File {
 
   }
 
-
-
   /**
    * set database tag to variable ie get imdb, tmdbid or tvdbid tag from name if
    * one exists.
@@ -217,6 +216,42 @@ public class JellyfinFile extends File {
       index++;
     }
     DBTag = tag.toString();
+    if (DBTag.isEmpty() && isFile())    {
+        localName = getParent();
+        index = 1;
+        while (index < localName.length() - 8) {
+            char currentChar = localName.charAt(index);
+            if (currentChar == '[') {
+                if (localName.substring(index, index + 3).equals("[tt")) {
+                    tag.append(' ');
+                    while (currentChar != ']') {
+                        currentChar = localName.charAt(index);
+                        tag.append(currentChar);
+                        index++;
+                    }
+                    break;
+                } else if (localName.substring(index, index + 7).equals("[tmdbid")) {
+                    tag.append(' ');
+                    while (currentChar != ']') {
+                        currentChar = localName.charAt(index);
+                        tag.append(currentChar);
+                        index++;
+                    }
+                    break;
+                } else if (localName.substring(index, index + 7).equals("[tvdbid")) {
+                    tag.append(' ');
+                    while (currentChar != ']') {
+                        currentChar = localName.charAt(index);
+                        tag.append(currentChar);
+                        index++;
+                    }
+                    break;
+                }
+            }
+            index++;
+        }
+        DBTag = tag.toString();
+    }
   }
 
   /**
@@ -224,6 +259,7 @@ public class JellyfinFile extends File {
    */
   private void setReleaseYear() {
     String localName = getName();
+
     int index = 1;
     while (index < localName.length() - 3) {
       if (isYear(localName.substring(index, index + 4))) {
