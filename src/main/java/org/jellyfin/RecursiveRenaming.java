@@ -1,6 +1,5 @@
 package org.jellyfin;
 
-import java.io.IOException;
 import java.util.Scanner;
 import java.util.Stack;
 
@@ -9,7 +8,7 @@ public class RecursiveRenaming {
   /**
    * runs the CLI version of the program
    */
-  public void runProgram() throws IOException {
+  public void runProgram() {
     System.out.println('\n' +
         "       _  __  __  _____     _                                    _               " + '\n' +
         "      | ||  \\/  ||  __ \\   (_)                                  (_)              " + '\n' +
@@ -47,11 +46,10 @@ public class RecursiveRenaming {
    * Recursivly rename all of the files and directories that are inside root and
    * it's subdirectories
    * 
-   * @param root
-   * @param consent true == delete useless files, false == don't delete useless
+   * @param hasConsent true == delete useless files, false == don't delete useless
    *                files
    */
-  private void recursiveRename(JellyfinFile root, boolean consent) {
+  private void recursiveRename(JellyfinFile root, boolean hasConsent) {
     // Step1
     String currentPath = root.getAbsolutePath() + "/";
     String[] subDirectoriePaths = root.list();
@@ -59,34 +57,36 @@ public class RecursiveRenaming {
     Stack<JellyfinFile> subtitleFiles = new Stack<>();
 
     // Step 2
-    for (String dirPath : subDirectoriePaths) {
-      JellyfinFile currentFile = new JellyfinFile(currentPath + dirPath);
-      // Step3
-      if (consent == true) {
-        if (currentFile.isUselessFile()) {
-          if (currentFile.delete()) {
-            System.out.println("Deleted file: " + currentFile.getAbsolutePath());
-          } else {
-            System.out.println("Failed to delete file: " + currentFile.getAbsolutePath());
+      if (subDirectoriePaths != null) {
+          for (String dirPath : subDirectoriePaths) {
+          JellyfinFile currentFile = new JellyfinFile(currentPath + dirPath);
+          // Step3
+          if (hasConsent) {
+            if (currentFile.isUselessFile()) {
+              if (currentFile.delete()) {
+                System.out.println("Deleted file: " + currentFile.getAbsolutePath());
+              } else {
+                System.out.println("Failed to delete file: " + currentFile.getAbsolutePath());
+              }
+              continue;
+            }
           }
-          continue;
+          // TODO add support for .srt files
+          if (currentFile.isSRTFile()) {
+            subtitleFiles.push(currentFile);
+            continue;
+          }
+          // Step4
+          JellyfinFile renamedFile = new JellyfinFile(currentFile.renameToJellyfinFormat());
+          // step5
+          if (renamedFile.isDirectory()) {
+            subDirectories.push(renamedFile);
+          }
         }
       }
-      // TODO add support for .srt files
-      if (currentFile.isSRTFile()) {
-        subtitleFiles.push(currentFile);
-        continue;
-      }
-      // Step4
-      JellyfinFile renamedFile = new JellyfinFile(currentFile.renameToJellyfinFormat());
-      // step5
-      if (renamedFile.isDirectory()) {
-        subDirectories.push(renamedFile);
-      }
-    }
-    // Step6
+      // Step6
     for (JellyfinFile subDirectory : subDirectories) {
-      recursiveRename(subDirectory, consent);
+      recursiveRename(subDirectory, hasConsent);
     }
   }
 

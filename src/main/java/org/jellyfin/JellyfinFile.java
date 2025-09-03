@@ -8,29 +8,64 @@ public class JellyfinFile extends File {
   private String releaseYear = "";
   private String seasonEpisode = "";
   private String DBTag = "";
-  private int indexOfYear;
 
-  public JellyfinFile(String pathToFile) {
+    public JellyfinFile(String pathToFile) {
     super(pathToFile);
     if (isFile()) {
       setFileExtension();
     }
   }
 
-  /**
+    /**
+     * Rename the file to comply with jellyfin naming scheme
+     *
+     * @return the absolutpath of the new renamed file or the old name if the file
+     *         could not be renamed
+     */
+    public String renameToJellyfinFormat() {
+        setReleaseYear();
+        setTitle();
+        setDBTag();
+
+        StringBuilder newName = new StringBuilder();
+        newName.append(getParent());
+        newName.append("/");
+        newName.append(title);
+        if (isEpisode()) {
+            setSeasonEpisode();
+            newName.append(seasonEpisode);
+        } else  {
+            newName.append(releaseYear);
+            newName.append(DBTag);
+        }
+        newName.append(fileExtension);
+        String oldName = getName();
+
+        if (getAbsolutePath().equals(newName.toString())) {
+            return getAbsolutePath();
+        }
+        File renamedFile = new File(newName.toString());
+        if (renameTo(renamedFile)) {
+            System.out.println(oldName + " renamed to " + newName);
+            return newName.toString();
+        } else {
+            System.out.println("Failed to rename " + oldName);
+            return getAbsolutePath();
+        }
+    }
+
+    /**
    * @return true if file is of type .srt
    */
   public boolean isSRTFile() {
     if (isFile()) {
-      if (fileExtension.equals(".srt")) {
-        return true;
-      }
+        return fileExtension.equals(".srt");
     }
     return false;
   }
 
   /**
-   * @return true if parent folder is a season folder ie.
+   * @return true if parent folder is a season folder i.e.
    *         /path/to/media/season/thisFile.txt
    */
   public boolean isEpisode() {
@@ -41,7 +76,7 @@ public class JellyfinFile extends File {
   }
 
   /**
-   * @return true if file is of "useless" type ie. .ext, .txt, .jpg, .png
+   * @return true if file is of "useless" type i.e. .ext, .txt, .jpg, .png
    */
   public boolean isUselessFile() {
     if (isFile()) {
@@ -55,43 +90,6 @@ public class JellyfinFile extends File {
     return false;
   }
 
-  /**
-   * Rename the file to comply with jellyfin naming scheme
-   * 
-   * @return the absolutpath of the new renamed file or the old name if the file
-   *         could not be renamed
-   */
-  public String renameToJellyfinFormat() {
-    setReleaseYear();
-    setTitle();
-    setDBTag();
-
-    StringBuilder newName = new StringBuilder();
-    newName.append(getParent());
-    newName.append("/");
-    newName.append(title);
-    if (isEpisode()) {
-      setSeasonEpisode();
-      newName.append(seasonEpisode);
-    } else {
-      newName.append(releaseYear);
-      newName.append(DBTag);
-    }
-    newName.append(fileExtension);
-    String oldName = getName();
-
-    if (getAbsolutePath().equals(newName.toString())) {
-      return getAbsolutePath();
-    }
-    File renamedFile = new File(newName.toString());
-    if (renameTo(renamedFile)) {
-      System.out.println(oldName + " renamed to " + newName);
-      return newName.toString();
-    } else {
-      System.out.println("Failed to rename " + oldName);
-      return getAbsolutePath();
-    }
-  }
 
   /**
    * Set te title variable
@@ -103,38 +101,79 @@ public class JellyfinFile extends File {
   private void setTitle() {
     if (isEpisode()) {
       title = getParentFile().getParentFile().getName();
+    }  else if (isFile()){
+        title = getName();
+        title = title.substring(0,title.lastIndexOf('.'));
+
+        }
+    else {
+        title = getName();
+    }
       removeUselessTagsFromTitle();
-      return;
+      title = title.replace('.', ' ');
+    while (title.charAt(title.length() -1) == ' ')  {
+        title = title.substring(0, title.length() - 1);
     }
-    title = getName();
-    removeUselessTagsFromTitle();
-    title = title.replace('.', ' ');
-    if (title.charAt(title.length() - 1) == ' ') {
-      title = title.substring(0, title.length() - 1);
-    }
+
   }
 
   /**
-   * remove useless tags from a file name ie.
+   * remove useless tags from a file name i.e.
    * A movie title (torrent site) [hdtv] [720p] {genre} --> A movie title
    */
   private void removeUselessTagsFromTitle() {
-    if (indexOfYear != 0 && indexOfYear < title.length()) {
-      title = title.substring(0, indexOfYear);
-    }
-    int indexOfChar = title.indexOf('(');
-    if (indexOfChar != -1) {
-      title = title.substring(0, indexOfChar);
-    }
-    indexOfChar = title.indexOf('[');
-    if (indexOfChar != -1) {
-      title = title.substring(0, indexOfChar);
-    }
-    indexOfChar = title.indexOf('{');
-    if (indexOfChar != -1) {
-      title = title.substring(0, indexOfChar);
-    }
+      int count = 0;
+      boolean hasForbiddenChar = false;
+      while (count < title.length())    {
+          int cutIndex = count;
+          int initialSize = title.length();
+          switch (title.charAt(count))  {
+              case '(':
+                  hasForbiddenChar = true;
+                  cutIndex = title.indexOf(')');
+                  break;
+              case'[':
+                  hasForbiddenChar = true;
+                  cutIndex = title.indexOf(']');
+                  break;
+              case'{':
+                  hasForbiddenChar = true;
+                  cutIndex = title.indexOf('}');
+                  break;
+                  //This is used to check for non-matching forbidden characters
+              case ')',']','}':
+                  hasForbiddenChar = true;
+                  cutIndex = count;
+                  break;
+              default:
+                  hasForbiddenChar = false;
+
+          }
+          if (hasForbiddenChar)    {
+              if (cutIndex != -1)   {
+                  String beforeCut = title.substring(0, count);
+                  String afterCut = title.substring(cutIndex + 1);
+                  title = beforeCut + afterCut;
+                  if (title.length() > initialSize)  {
+                      throw new RuntimeException("Please manually rename: " + title + " and rerun the program");
+                  }
+              } else {
+                  String beforeCut = title.substring(0, count);
+                  String afterCut = title.substring(count + 1);
+                  title = beforeCut + afterCut;
+                  if (title.length() > initialSize)  {
+                      throw new RuntimeException("Please manually rename: " + title + " and rerun the program");
+                  }
+              }
+
+          } else {
+              count++;
+          }
+      }
+
   }
+
+
 
   /**
    * set database tag to variable ie get imdb, tmdbid or tvdbid tag from name if
@@ -147,7 +186,7 @@ public class JellyfinFile extends File {
     while (index < localName.length() - 8) {
       char currentChar = localName.charAt(index);
       if (currentChar == '[') {
-        if (localName.substring(index, index + 4) == "[tt") {
+        if (localName.substring(index, index + 3).equals("[tt")) {
           tag.append(' ');
           while (currentChar != ']') {
             currentChar = localName.charAt(index);
@@ -155,7 +194,7 @@ public class JellyfinFile extends File {
             index++;
           }
           break;
-        } else if (localName.substring(index, index + 8) == "[tmdbid") {
+        } else if (localName.substring(index, index + 7).equals("[tmdbid")) {
           tag.append(' ');
           while (currentChar != ']') {
             currentChar = localName.charAt(index);
@@ -163,7 +202,7 @@ public class JellyfinFile extends File {
             index++;
           }
           break;
-        } else if (localName.substring(index, index + 8) == "[tvdbid") {
+        } else if (localName.substring(index, index + 7).equals("[tvdbid")) {
           tag.append(' ');
           while (currentChar != ']') {
             currentChar = localName.charAt(index);
@@ -187,12 +226,27 @@ public class JellyfinFile extends File {
     while (index < localName.length() - 3) {
       if (isYear(localName.substring(index, index + 4))) {
         releaseYear = " (" + localName.substring(index, index + 4) + ")";
-        indexOfYear = index;
-        break;
+          return;
       } else {
         index++;
       }
     }
+    //Checks if the folder of the movie has release year
+      if (isFile()) {
+          localName = getParent();
+          index = 1;
+          while (index < localName.length() - 3) {
+              if (isYear(localName.substring(index, index + 4))) {
+                  releaseYear = " (" + localName.substring(index, index + 4) + ")";
+                  title = title + releaseYear;
+                  return;
+              } else {
+                  index++;
+              }
+          }
+      }
+
+
   }
 
   /**
@@ -212,7 +266,7 @@ public class JellyfinFile extends File {
   }
 
   /**
-   * get file extension and set it to a variable ie. .mp4, .mkv etc
+   * get file extension and set it to a variable i.e. .mp4, .mkv etc
    */
   private void setFileExtension() {
     String localName = getName();
@@ -233,13 +287,14 @@ public class JellyfinFile extends File {
     String episode = null;
     int count = 0;
     while (count + 2 < pathLowerCase.length()) {
-      if (pathLowerCase.charAt(count) == 's') {
-        if (Character.isDigit(localName.charAt(count + 1)) && Character.isDigit(localName.charAt(count + 2))) {
+        boolean hasCorrectDigits = Character.isDigit(localName.charAt(count + 1)) && Character.isDigit(localName.charAt(count + 2));
+        if (pathLowerCase.charAt(count) == 's') {
+        if (hasCorrectDigits) {
           season = localName.substring(count, count + 3);
         }
       }
       if (pathLowerCase.charAt(count) == 'e') {
-        if (Character.isDigit(localName.charAt(count + 1)) && Character.isDigit(localName.charAt(count + 2))) {
+        if (hasCorrectDigits) {
           episode = localName.substring(count, count + 3);
           break;
         }
