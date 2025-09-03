@@ -33,7 +33,7 @@ public class JellyfinFile extends File {
         if (isEpisode()) {
             setSeasonEpisode();
             newName.append(seasonEpisode);
-        } else  {
+        } else if (!title.toLowerCase().contains("season"))  {
             newName.append(releaseYear);
             newName.append(DBTag);
         }
@@ -78,6 +78,8 @@ public class JellyfinFile extends File {
     }
     return getParentFile().getName().toLowerCase().contains("season");
   }
+
+
 
   /**
    * @return true if file is of "useless" type i.e. .ext, .txt, .jpg, .png
